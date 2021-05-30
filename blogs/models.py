@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
 # Create your models here.
 class Categories(models.Model):
     title = models.CharField(max_length=100)
@@ -38,7 +39,6 @@ class Users(models.Model):
         return self.fname + ' ' + self.lname
 
 
-
 class Posts(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -67,6 +67,7 @@ class Comments(models.Model):
     updated_at = datetime.datetime.now()
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, related_name="comments", on_delete=models.CASCADE, null=True)
+
     def __str__(self):
         return self.content
 
@@ -80,6 +81,3 @@ class Replies(models.Model):
 
     def __str__(self):
         return self.content
-
-
-
