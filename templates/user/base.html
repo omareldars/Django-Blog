@@ -1,0 +1,17 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{# here we must include header#}
+{# here will be title block #}
+    {% block page_content %}
+    {% endblock %}
+{# here we must include footer #}
+</body>
+</html>
