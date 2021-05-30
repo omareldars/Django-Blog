@@ -49,7 +49,7 @@ class Posts(models.Model):
     updated_at = datetime.datetime.now()
     author = models.ForeignKey(Users, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+    category = models.ManyToManyField(Categories, related_name='posts')
 
     def total_likes(self):
         return self.likes.count()
@@ -58,7 +58,7 @@ class Posts(models.Model):
         return self.dislikes.count()
 
     def __str__(self):
-        return self.content
+        return self.content + '  likes: ' + str(self.total_likes()) + '  dislikes: ' + str(self.total_dislikes())
 
 
 class Comments(models.Model):
