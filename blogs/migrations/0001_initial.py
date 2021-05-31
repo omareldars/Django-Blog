@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ('content', models.TextField()),
                 ('likes', models.IntegerField(default=0)),
                 ('dislikes', models.IntegerField(default=0)),
-                ('picture', models.FilePathField(path='blogs/statics/images')),
+                ('picture', models.FilePathField(path='blogs/static/images')),
                 ('category_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='blogs.categories')),
                 ('comment_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='blogs.comments')),
                 ('tag_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='blogs.tags')),
