@@ -1,0 +1,42 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% load static %}
+<header class="header-area">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+                    <a class="navbar-brand" href=""><strong><span style="color: green;">i</span>Blog</a></strong>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#worldNav" aria-controls="worldNav" aria-expanded="true" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+
+                    <div class="navbar-collapse collapse show ml-5" id="worldNav" style="margin-bottom:-12px">
+                        <div id="search-wrapper" style="padding: 12px;">
+                            <form action="#">
+                                <input type="text" id="search" placeholder="Search something...">
+                                <div id="close-icon"></div>
+                                <input class="d-none" type="submit" value="">
+                            </form>
+                        </div>
+                        <ul class="navbar-nav ml-auto" style="margin-bottom:12px;margin-right: 25px;">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Home <span class="sr-only"></span></a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Category</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="">Home</a>
+                                    <a class="dropdown-item" href="">Catagory</a>
+                                </div>
+                            </li>
+                        
+                            <li class="nav-item">
+                                <span class="nav-link"><a href="#" style="color: green;">Login</a>/<a href="#">Register</a></span>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+    </div>
+</header>
