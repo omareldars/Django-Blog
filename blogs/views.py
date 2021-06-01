@@ -31,7 +31,7 @@ def new_category(request):
         form = category_form(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/all')
+            return HttpResponseRedirect('/all/')
 
     context = {'ct_form': form}
     return render(request, 'dashboard/newcategory.html', context)
@@ -45,7 +45,7 @@ def edit_category(request, category_id):
         form = category_form(request.POST, instance=category)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/all')
+            return HttpResponseRedirect('/all/')
 
     context = {'ct_form': form}
     return render(request, 'dashboard/newcategory.html', context)
@@ -55,7 +55,7 @@ def edit_category(request, category_id):
 def delete_category(request, category_id):
     category = Categories.objects.get(id=category_id)
     category.delete()
-    return HttpResponseRedirect('/dashboard/all')
+    return HttpResponseRedirect('/all/')
 
 
 # get all category

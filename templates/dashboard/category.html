@@ -4,7 +4,7 @@
 <h2 style="text-align:center;">All category</h2>
 <div class="container text-center">
     <br><br>
-<button  class="btn btn-success"><a style="color:white;" href='/dashboard/new'>Add New Category</a></button>
+<button  class="btn btn-success"><a style="color:white;" href="{% url 'add-category' %}">Add New Category</a></button>
 </div>
 <br><br>
 {% endblock %}
@@ -17,8 +17,8 @@
     {% for cat in categories %}
     <tr>
         <td>{{ cat.title }}</td>
-        <td><a  class="btn btn-primary"href="/dashboard/edit/{{cat.id}}">Edit</a></td>
-        <td ><a class="btn btn-danger" href="/dashboard/delete/{{cat.id}}">Delete</a></td>
+        <td><a  class="btn btn-primary"href="{% url 'edit-category' cat.id %}">Edit</a></td>
+        <td ><a class="btn btn-danger" href="{% url 'delete-category' cat.id %}">Delete</a></td>
     </tr>
     {% endfor %}
 </table>
