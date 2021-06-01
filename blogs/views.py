@@ -6,8 +6,9 @@ from .models import Users, Categories, Tags, Posts, Replies, Comments, Forbidden
 
 # Create your views here.
 
+
 def say_dashboard(request):
-    return render(request, 'dashboard/base.html',{})
+    return render(request, 'dashboard/base.html', {})
 
 
 def say_blogs(request):
@@ -15,10 +16,10 @@ def say_blogs(request):
 
 
 def blog_detail(request, id):
-    post = Posts.objects.get(id = id)
+    post = Posts.objects.get(id=id)
     comments = Comments.objects.filter(post=post)
     context = {
-        "post":post,
+        "post": post,
         "comments": comments,
     }
     return render(request, 'user/post-details.html', context)
@@ -63,3 +64,23 @@ def getAllCategory(request):
     all_category = Categories.objects.all()
     context = {'categories': all_category}
     return render(request, 'dashboard/category.html', context)
+
+
+# new post
+def new_post(request):
+    form = post_form()
+    # user_id = request.user.id
+    # print(user_id)
+    if request.method == 'POST':
+        form = post_form(request.POST, request.FILES)
+        post = form.save(commit=False)
+        print(form)
+        # post.user_id = int(user_id)
+        # print(form)
+        if form.is_valid():
+            post.save()
+            return HttpResponseRedirect(
+                '#')
+
+    context = {'p_form': form}
+    return render(request, 'dashboard/newpost.html', context)
