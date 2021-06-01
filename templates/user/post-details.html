@@ -13,7 +13,7 @@
         <p>Content: {{ post.content | linebreaks }}</p>
         <p>Likes: {{ post.total_likes }} |&nbsp; Dislikes: {{ post.total_dislikes }}</p>
         <p>Tags: {{ post.tag }}</p>
-        <img src="{{ post.picture }}" alt="image" width="500" height="600">
+        <img src="{{ post.picture.url }}" alt="image" width="500" height="600">
         <p>{{ post.author }}</p>
         <h3> Leave a comment:</h3>
         <form action="/blog/{{ post.id }}/" method="post">

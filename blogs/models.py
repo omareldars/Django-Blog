@@ -44,7 +44,7 @@ class Posts(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(Users, related_name="likes")
     dislikes = models.ManyToManyField(Users, related_name="dislikes")
-    picture = models.ImageField(upload_to='images')
+    picture = models.ImageField(null=True, blank=True)
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
     author = models.ForeignKey(Users, on_delete=models.CASCADE)
