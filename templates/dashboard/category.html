@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title_block %}
+<h2 style="text-align:center;">All category</h2>
+<div class="container text-center">
+    <br><br>
+<button  class="btn btn-success"><a style="color:white;" href='/dashboard/new'>Add New Category</a></button>
+</div>
+<br><br>
+{% endblock %}
+
+{% block main_block %}
+<div class="container">
+<table class="table table-dark">
+    <th >CategoryName</th>
+    <th colspan="2">Action</th>
+    {% for cat in categories %}
+    <tr>
+        <td>{{ cat.title }}</td>
+        <td><a  class="btn btn-primary"href="/dashboard/edit/{{cat.id}}">Edit</a></td>
+        <td ><a class="btn btn-danger" href="/dashboard/delete/{{cat.id}}">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}
