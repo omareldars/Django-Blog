@@ -5,21 +5,34 @@ from django.contrib.auth.forms import UserCreationForm ,AuthenticationForm ,User
 from django.http import  HttpResponseRedirect
 from django.core.exceptions import ValidationError
 
+from django.contrib.auth.forms import AuthenticationForm
+from django import forms
+from blogs.models import Posts,Categories,ForbiddenWords
+from django.http import HttpResponseRedirect
 
 
 class post_form(forms.ModelForm):
-	class Meta:
-		model = Posts
-		fields = ('title','picture','content','category')
-        
+    class Meta:
+        model = Posts
+        fields = ('title', 'picture', 'content', 'category', 'author', 'tag')
+        # widgets = {
+        #     'title': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'content': forms.Textarea(attrs={'class': 'form-control'}),
+        #     'author': forms.Select(attrs={'class': 'custom-select'}),
+        #     'tag': forms.Select(attrs={'class': 'custom-select'}),
+        #     'picture': forms.FileInput(attrs={'class': 'form-control-file'}),
+
+        #     'category': forms.Select(attrs={'class': 'custom-select'}),
+        # }
+
 
 class category_form(forms.ModelForm):
-  class Meta:
-    model = Categories
-    fields = ('title',)
-    widgets = {
+    class Meta:
+        model = Categories
+        fields = ('title',)
+        widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            
+
         }
 
 
@@ -52,3 +65,10 @@ class RegistrationForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise ValidationError("Email already used before.. try another one")
         return self.cleaned_data
+
+
+class ForbiddenWordForm(forms.ModelForm):
+	title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+	class Meta:
+		model = ForbiddenWords
+		fields = ('title',)
