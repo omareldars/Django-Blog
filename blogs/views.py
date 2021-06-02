@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form
+from .forms import post_form, category_form,ForbiddenWordForm
 from .models import Users, Categories, Tags, Posts, Replies, Comments, ForbiddenWords
 
 # Create your views here.
@@ -63,3 +63,67 @@ def getAllCategory(request):
     all_category = Categories.objects.all()
     context = {'categories': all_category}
     return render(request, 'dashboard/category.html', context)
+
+#add forbiden word
+def add_forbiden_word(request):
+    form = ForbiddenWordForm()
+    if request.method == 'POST':
+        form = ForbiddenWordForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/allforbidden/')
+    else:
+        context = {"pt_form": form}
+        return render(request,"dashboard/newforbiden.html",context)
+
+#delete forbidden word 
+def delete_forbiden_word(request, word_id):
+   title = ForbiddenWords.objects.get(id=word_id)
+   title.delete()
+   return HttpResponseRedirect('/allforbidden/')
+
+# get all forbiden word
+def getAllWord(request):
+    all_word= ForbiddenWords.objects.all()
+    context = {'words': all_word}
+    return render(request, 'dashboard/allword.html', context)
+
+# edit word
+def edit_forbiden_word(request, word_id):
+    word = ForbiddenWords.objects.get(id=word_id)
+    form = ForbiddenWordForm(instance=word)
+    if request.method == 'POST':
+        form = ForbiddenWordForm(request.POST, instance=word)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/allforbidden/')
+
+    context = {'pt_form': form}
+    return render(request, 'dashboard/newforbiden.html', context)
+
+#take comment text to be replaced with the original comment on post
+def check_forbidden_words_in_comment(request, content):
+    content_arr = content.split(",")
+    all_forbidden_words = ForbiddenWords.objects.all()
+    for word in all_forbidden_words:
+        replaced=""
+        if content.find(word.title):
+            for c in word.title:
+                replaced+="*"
+            content= content.replace(word.title,replaced)
+
+    return HttpResponseRedirect('/forbidden_words/')
+
+
+def check_profanity(content):
+    filtered = ''
+    first_word = True
+    for word in content.split():
+        if not first_word:
+            filtered += ' '
+        first_word = False
+        if ForbiddenWords.objects.filter(title = word.lower()):
+            filtered += ('*' * len(word))
+        else:
+            filtered += word
+    return filtered
