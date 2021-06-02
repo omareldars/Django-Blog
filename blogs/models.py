@@ -47,8 +47,10 @@ class Posts(models.Model):
     likes = models.ManyToManyField(Users, related_name="likes")
     dislikes = models.ManyToManyField(Users, related_name="dislikes")
     picture = models.ImageField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = datetime.datetime.now()
+    updated_at = datetime.datetime.now()
     author = models.ForeignKey(Users, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
     category = models.ManyToManyField(Categories, related_name='posts')
@@ -65,8 +67,8 @@ class Posts(models.Model):
 
 class Comments(models.Model):
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = datetime.datetime.now()
+    updated_at = datetime.datetime.now()
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, related_name="comments", on_delete=models.CASCADE, null=True)
 
