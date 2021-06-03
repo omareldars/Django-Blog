@@ -22,4 +22,6 @@ urlpatterns = [
     path('alltag/', views.getAllTag, name='all-tags'),
     path('edittag/<tag_id>', views.edit_tag, name='edit-tag'),
     path('deletetag/<tag_id>', views.delete_tag, name='delete-tag'),
+    path('subscribe/<cat_id>', views.subscribe),
+    path('unsubscribe/<cat_id>', views.unsubscribe),
 ]

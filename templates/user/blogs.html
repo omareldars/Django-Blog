@@ -3,4 +3,35 @@
     <div class="alert alert-success">
         <h1 class="text-center">This is Home</h1>
     </div>
+    <div class="container">
+        <div class="row py-3">
+            <div class="col-3 order-2" id="sticky-sidebar">
+                <div class="sticky-top">
+                    <table class="table table-striped">
+                        <thead>
+                          <tr class="text-center">
+                            <th scope="col" colspan="3" >Categories</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                                <tr class="text-center ">
+                                    <td class="align-middle">{{ category }}</td>
+                                    {% if user in category.user.all %}
+                                        <td><button type="button" class="btn btn-danger" ><a href="/unsubscribe/{{category.id}}">-</a></button></td>
+                                    {% else %}
+                                        <td><button type="button" class="btn btn-success" ><a href="/subscribe/{{category.id}}">+</a></button></td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+            <div class="col" id="main">
+                <h1>Main Area</h1>
+                ...   
+            </div>
+        </div>
+    </div>
 {% endblock %}

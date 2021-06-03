@@ -65,7 +65,10 @@ def say_dashboard(request):
 
 
 def say_blogs(request):
-    return render(request, 'user/blogs.html', {})
+    all_categories = Categories.objects.all()
+    user = request.user
+    context = {'categories': all_categories,  'user': user}
+    return render(request, 'user/blogs.html', context)
 
 
 def blog_detail(request, id):
@@ -240,3 +243,63 @@ def edit_tag(request, tag_id):
 
     context = {'pt_form': form}
     return render(request, 'dashboard/newtag.html', context)
+
+
+# Categories
+
+
+
+
+
+# def subscribe_category(request, c_id):
+#     category = Categories.objects.get(pk=c_id)
+#     # user = User.objects.get(pk = request.user.id)
+#     # user = request.user
+#     user = request.user
+#     username = request.user.username
+#     user_email = request.user.email
+#     category_name = category.categoryName
+#     send_mail('successfully subscribed','Thank you '+ username +'\nYou have successfully subscribed to ' + category_name + ' category' , 'noreply@iblog.com', [user_email])
+#     category.users.add(user)
+
+#     # return HttpResponseRedirect("/category_details/" + c_id)    #/category/all/  or /home/
+#     return HttpResponseRedirect("/")
+
+
+# def unsubscribe_category(request, c_id):
+#     category = Categories.objects.get(pk=c_id)
+#     # user = User.objects.get(pk = request.user.id)
+#     # user = request.user
+#     user = request.user
+#     username = request.user.username
+#     user_email = request.user.email
+#     category_name = category.categoryName
+#     send_mail('successfully unsubscribed','Thank you '+ username +'\nYou have successfully unsubscribed from ' + category_name + ' category' , 'noreply@iblog.com', [user_email])
+
+#     category.users.remove(user)
+#     return HttpResponseRedirect("/")
+
+# def is_subscribed(request,u_id):
+#     category = Categories.objects.get(fk=u_id)
+
+
+
+
+def subscribe(request, cat_id):
+    user = request.user
+    category = Categories.objects.get(id=cat_id)
+    category.users.add(user)
+    # send email to user after subscription
+    try:
+        send_mail("subscribed to a new category", 'hello ,'+user.fname+" "+user.lname+'\nyou have just subscribed to category '+category.title,
+                  'dproject.os40@gmail.com', [user.email], fail_silently=False,)
+    except Exception as ex:
+        log("couldn't send email message"+str(ex))
+    return HttpResponseRedirect('/')
+
+
+def unsubscribe(request, cat_id):
+    user = request.user
+    category = Categories.objects.get(id=cat_id)
+    category.users.remove(user)
+    return HttpResponseRedirect('/')
