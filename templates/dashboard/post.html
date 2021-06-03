@@ -1,0 +1,43 @@
+
+{% extends 'dashboard/base.html' %} 
+{% block title_block %}
+<h2 style="text-align: center">All Posts</h2>
+<div class="container text-center">
+  <br /><br />
+  <button class="btn btn-success">
+    <a style="color: white" href="{% url 'add-post' %}">Add New Post</a>
+  </button>
+</div>
+<br /><br />
+{% endblock %} {% block main_block %}
+<div class="container">
+  <table class="table table-dark">
+    <th>PostName</th>
+    <th>Postcontent</th>
+    <th>Postcategory</th>
+    <th>Postauthor</th>
+    <th>Posttag</th>
+    <th colspan="2">Action</th>
+    {% for post in posts %}
+    <tr>
+        <td>{{ post.title }}</td>
+        <td>{{ post.content}}</td>
+        <td>{{ post.category}}</td>
+        <td>{{ post.author }}</td>
+        <td>{{ post.tag }}</td>
+        <td>{{ post.picture }}</td>
+  
+        <td>
+          <a class="btn btn-primary" href="{% url 'edit-post' post.id %}">Edit</a>
+        </td>
+        <td>
+          <a class="btn btn-danger" href="{% url 'delete-post' post.id %}"
+            >Delete</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endblock %}
+  

@@ -1,26 +1,32 @@
 from django import forms
-from blogs.models import Posts,Categories
+from blogs.models import Posts,Categories,ForbiddenWords,Tags
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm ,AuthenticationForm ,UsernameField , PasswordChangeForm
 from django.http import  HttpResponseRedirect
 from django.core.exceptions import ValidationError
-from blogs.models import Posts,Categories,ForbiddenWords
 from .models import Profile
+
+
 
 
 class post_form(forms.ModelForm):
     class Meta:
         model = Posts
-        fields = ('title', 'picture', 'content', 'category', 'author', 'tag')
-        # widgets = {
-        #     'title': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'content': forms.Textarea(attrs={'class': 'form-control'}),
-        #     'author': forms.Select(attrs={'class': 'custom-select'}),
-        #     'tag': forms.Select(attrs={'class': 'custom-select'}),
-        #     'picture': forms.FileInput(attrs={'class': 'form-control-file'}),
+        fields = ('title', 'picture', 'content', 'author', 'tag', 'category')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'author': forms.Select(attrs={'class': 'custom-select'}),
+            'tag': forms.Select(attrs={'class': 'custom-select'}),
+            'picture': forms.FileInput(attrs={'class': 'form-control-file'}),
+            # 'category': forms.CheckboxSelectMultiple(attrs={'class': 'select', 'multiple':True,})
+            'category': forms.Select(attrs={'class':'custom-select'}),
+        }
+        # category = forms.ModelMultipleChoiceField(
+		# 	queryset=Categories.objects.all(),
+		# 	widget=forms.CheckboxSelectMultiple
+		# )
 
-        #     'category': forms.Select(attrs={'class': 'custom-select'}),
-        # }
 
 
 class category_form(forms.ModelForm):
@@ -91,4 +97,10 @@ class ForbiddenWordForm(forms.ModelForm):
 	title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
 	class Meta:
 		model = ForbiddenWords
+		fields = ('title',)
+
+class TagForm(forms.ModelForm):
+	title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+	class Meta:
+		model = Tags
 		fields = ('title',)

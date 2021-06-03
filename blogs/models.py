@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
 fs = FileSystemStorage()
 
 # class Users(models.Model):
@@ -25,7 +24,7 @@ fs = FileSystemStorage()
 # Create your models here.
 class Categories(models.Model):
     title = models.CharField(max_length=100)
-    users = models.ManyToManyField(User, null=True, blank=True)
+    # users = models.ManyToManyField(Users, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -50,16 +49,17 @@ class ForbiddenWords(models.Model):
 class Posts(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    likes = models.ManyToManyField(User, related_name="likes")
-    dislikes = models.ManyToManyField(User, related_name="dislikes")
+    likes = models.ManyToManyField(User, related_name="likes",blank=True)
+    dislikes = models.ManyToManyField(User, related_name="dislikes",blank=True)
     picture = models.ImageField(null=True, blank=True)
     # created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(auto_now_add=True)
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
-    category = models.ManyToManyField(Categories, related_name='posts')
+    author = models.ForeignKey(User, on_delete=models.PROTECT)
+    tag = models.ForeignKey(Tags, on_delete=models.PROTECT)
+    # category = models.ManyToManyField(Categories, related_name='posts')
+    category =models.ForeignKey(Categories,on_delete=models.PROTECT)
 
     def total_likes(self):
         return self.likes.count()
@@ -75,8 +75,8 @@ class Comments(models.Model):
     content = models.TextField()
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Posts, related_name="comments", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    post = models.ForeignKey(Posts, related_name="comments", on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return self.content
@@ -84,8 +84,8 @@ class Comments(models.Model):
 
 class Replies(models.Model):
     content = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comments, related_name="replies", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    comment = models.ForeignKey(Comments, related_name="replies", on_delete=models.PROTECT, null=True)
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
 
