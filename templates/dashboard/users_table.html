@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title_block %}
+<h2 style="text-align:center;">All Users</h2>
+<div class="container text-center">
+    <br><br>
+<button  class="btn btn-success"><a style="color:white;" href="#">Add New User</a></button>
+</div>
+<br><br>
+{% endblock %}
+
+{% block main_block %}
+<div class="container">
+<table class="table table-dark">
+    <th>Username</th>
+    <th>Email</th>
+    <th>Join Date</th>
+    <th>Last Login</th>
+    <th span="3">Actions</th>
+  
+
+    <tr>
+        
+        <td>
+        <a  class="btn btn-primary"href="#">Edit</a>
+        <a class="btn btn-danger" href="#" onclick= "return confirm('are you sure ?');">Delete</a></td>
+        <a href="#"><button type="button" class="btn btn-danger"> Block </button></a>
+        <a href="#"><button type="button" class="btn btn-success"> Promote </button></a>
+        <a href="#"><button type="button" class="btn btn-primary"> Unblock </button></a>
+        </td>
+    </tr>
+  
+</table>
+</div>
+{% endblock %}

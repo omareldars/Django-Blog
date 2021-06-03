@@ -7,19 +7,25 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 
 
+
 class post_form(forms.ModelForm):
     class Meta:
         model = Posts
-        fields = ('title', 'picture', 'content', 'category', 'author', 'tag')
-        # widgets = {
-        #     'title': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'content': forms.Textarea(attrs={'class': 'form-control'}),
-        #     'author': forms.Select(attrs={'class': 'custom-select'}),
-        #     'tag': forms.Select(attrs={'class': 'custom-select'}),
-        #     'picture': forms.FileInput(attrs={'class': 'form-control-file'}),
+        fields = ('title', 'picture', 'content', 'author', 'tag', 'category')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'author': forms.Select(attrs={'class': 'custom-select'}),
+            'tag': forms.Select(attrs={'class': 'custom-select'}),
+            'picture': forms.FileInput(attrs={'class': 'form-control-file'}),
+            # 'category': forms.CheckboxSelectMultiple(attrs={'class': 'select', 'multiple':True,})
+            'category': forms.Select(attrs={'class':'custom-select'}),
+        }
+        # category = forms.ModelMultipleChoiceField(
+		# 	queryset=Categories.objects.all(),
+		# 	widget=forms.CheckboxSelectMultiple
+		# )
 
-        #     'category': forms.Select(attrs={'class': 'custom-select'}),
-        # }
 
 
 class category_form(forms.ModelForm):

@@ -8,6 +8,7 @@ from .forms import RegistrationForm
 from django.contrib.auth import login, authenticate,update_session_auth_hash
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 import os
 
 #register
@@ -182,24 +183,24 @@ def check_profanity(content):
             filtered += word
     return filtered
 
-# new post
-def new_post(request):
-    form = post_form()
-    # user_id = request.user.id
-    # print(user_id)
-    if request.method == 'POST':
-        form = post_form(request.POST, request.FILES)
-        post = form.save(commit=False)
-        print(form)
-        # post.user_id = int(user_id)
-        # print(form)
-        if form.is_valid():
-            post.save()
-            return HttpResponseRedirect(
-                '#')
+# # new post
+# def new_post(request):
+#     form = post_form()
+#     # user_id = request.user.id
+#     # print(user_id)
+#     if request.method == 'POST':
+#         form = post_form(request.POST, request.FILES)
+#         post = form.save(commit=False)
+#         print(form)
+#         # post.user_id = int(user_id)
+#         # print(form)
+#         if form.is_valid():
+#             post.save()
+#             return HttpResponseRedirect(
+#                 '#')
 
-    context = {'p_form': form}
-    return render(request, 'dashboard/newpost.html', context)
+#     context = {'p_form': form}
+#     return render(request, 'dashboard/newpost.html', context)
 
 # add new tag 
 def new_tag(request):
@@ -240,3 +241,57 @@ def edit_tag(request, tag_id):
 
     context = {'pt_form': form}
     return render(request, 'dashboard/newtag.html', context)
+
+
+
+# add category
+def new_post(request):
+    form = post_form()
+    if request.method == 'POST':
+        form = post_form(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/allpost/')
+
+    context = {'p_form': form}
+    return render(request, 'dashboard/newpost.html', context)
+
+
+
+
+
+# delete post
+def post_delete(request, post_id):
+    post = Posts.objects.get(id=post_id)
+    post.delete()
+    return HttpResponseRedirect('/allpost/')
+
+# get all posts
+def getAllPost(request):
+    all_post = Posts.objects.all()
+    context = {'posts': all_post}
+    return render(request, 'dashboard/post.html', context)
+
+#edit post
+def edit_post(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    if request.method == 'POST':
+        form = post_form(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            picture = request.FILES.get('picture')
+            if (picture):
+                if(post.picture):
+                    delete_profile_pic(post.picture)
+                post.picture = picture
+            post.user = request.user
+
+            # tag_list = getTags(request.POST.get('tag'))
+            post.save()
+            # queryset = Tag.objects.filter(name__in=tag_list)
+            # post.tags.set(queryset)
+            return HttpResponseRedirect('/allpost')
+    else:
+        form = post_form(instance=post)
+        context = {"p_form": form}
+        return render(request, "dashboard/newpost.html", context)
