@@ -1,16 +1,29 @@
 import datetime
-
+from django.utils import timezone
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+class Users(models.Model):
+    fname = models.CharField(max_length=50)
+    lname = models.CharField(max_length=50)
+    username = models.CharField(max_length=70)
+    email = models.EmailField()
+    age = models.IntegerField(default=18, validators=[MaxValueValidator(60), MinValueValidator(18)])
+    is_blocked = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.fname + ' ' + self.lname
+
 # Create your models here.
 class Categories(models.Model):
     title = models.CharField(max_length=100)
+    users = models.ManyToManyField(Users, null=True, blank=True)
 
     def __str__(self):
         return self.title
-
+  
 
 class Tags(models.Model):
     title = models.CharField(max_length=100)
@@ -26,17 +39,6 @@ class ForbiddenWords(models.Model):
         return self.title
 
 
-class Users(models.Model):
-    fname = models.CharField(max_length=50)
-    lname = models.CharField(max_length=50)
-    username = models.CharField(max_length=70)
-    email = models.EmailField()
-    age = models.IntegerField(default=18, validators=[MaxValueValidator(60), MinValueValidator(18)])
-    is_blocked = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.fname + ' ' + self.lname
 
 
 class Posts(models.Model):
@@ -45,6 +47,8 @@ class Posts(models.Model):
     likes = models.ManyToManyField(Users, related_name="likes")
     dislikes = models.ManyToManyField(Users, related_name="dislikes")
     picture = models.ImageField(null=True, blank=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now_add=True)
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
     author = models.ForeignKey(Users, on_delete=models.CASCADE)

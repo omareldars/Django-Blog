@@ -1,19 +1,46 @@
 {% load bootstrap4 %}
+{% load static %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <link href="{% static 'bluma.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dist/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/fonts/fontawesome/css/fontawesome.min.css' %}%">
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/fonts/iconic/css/material-design-iconic-font.min.css' %}%">
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/vendor/animate/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/vendor/css-hamburgers/hamburgers.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'dist/vendor/animsition/css/animsition.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'dist/vendor/select2/select2.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'dist/vendor/daterangepicker/daterangepicker.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'userscss/util.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'userscss/main.css' %}">
+    <link rel="stylesheet" href="{% static 'forms.css' %}" /> 
+
+   
+    <title>iBlog</title>
 </head>
 <body>
 <!-- {# here we must include header#} -->
     {% include "user/header.html" %}
 
-{# here will be title block #}
+<!-- {# here will be title block #} -->
     {% block page_content %}
     {% endblock %}
 {# here we must include footer #}
+
+
+<script src="{% static 'dist/vendor/jquery/jquery-3.2.1.min.js' %}" ></script>
+<script src="{% static 'dist/vendor/animsition/js/animsition.min.js' %}"></script>
+<script src="{% static 'dist/js/popper.min.js' %}"></script>
+<script src="{% static 'dist/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'dist/vendor/select2/select2.min.js' %}"></script>
+<script src="{% static 'dist/vendor/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'dist/vendor/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'dist/vendor/countdowntime/countdowntime.js' %}"></script>
+
 </body>
 </html>

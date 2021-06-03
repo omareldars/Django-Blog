@@ -1,5 +1,7 @@
 from django.urls import path, include
 from blogs import views
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('', views.say_blogs, name='home'),
@@ -9,5 +11,15 @@ urlpatterns = [
     path('all/', views.getAllCategory, name='all-categories'),
     path('edit/<category_id>', views.edit_category, name='edit-category'),
     path('delete/<category_id>', views.delete_category, name='delete-category'),
-    path('newpost/', views.new_post, name="add-post")
+    path('register/',views.register , name='register'),
+    path('newword/', views.add_forbiden_word, name='add-word'),
+    path('deleteword/<word_id>', views.delete_forbiden_word, name='delete-word'),
+    path('editword/<word_id>', views.edit_forbiden_word, name='edit-word'),
+    path('allforbidden/', views.getAllWord, name='all-word'),
+    path('forbidden_words/', views.getAllWord, name='all-word'),
+    path('newpost/', views.new_post, name="add-post"),
+    path('newtag/', views.new_tag, name='add-tag'),
+    path('alltag/', views.getAllTag, name='all-tags'),
+    path('edittag/<tag_id>', views.edit_tag, name='edit-tag'),
+    path('deletetag/<tag_id>', views.delete_tag, name='delete-tag'),
 ]
