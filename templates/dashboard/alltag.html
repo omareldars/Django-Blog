@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title_block %}
+<h2 style="text-align:center;">All words</h2>
+<div class="container text-center">
+    <br><br>
+<button  class="btn btn-success"><a style="color:white;" href="{% url 'add-tag' %}">Add New Tag</a></button>
+</div>
+<br><br>
+{% endblock %}
+
+{% block main_block %}
+<div class="container">
+<table class="table table-dark">
+    <th >TagTitle</th>
+    <th colspan="2">Action</th>
+    {% for tag in tags %}
+    <tr>
+        <td>{{ tag.title }}</td>
+        <td><a  class="btn btn-primary"href="{% url 'edit-tag' tag.id %}">Edit</a></td>
+        <td ><a class="btn btn-danger" href="{% url 'delete-tag' tag.id %}" onclick= "return confirm('are you sure ?');">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

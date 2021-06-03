@@ -17,5 +17,9 @@ urlpatterns = [
     path('editword/<word_id>', views.edit_forbiden_word, name='edit-word'),
     path('allforbidden/', views.getAllWord, name='all-word'),
     path('forbidden_words/', views.getAllWord, name='all-word'),
-    path('newpost/', views.new_post, name="add-post")
+    path('newpost/', views.new_post, name="add-post"),
+    path('newtag/', views.new_tag, name='add-tag'),
+    path('alltag/', views.getAllTag, name='all-tags'),
+    path('edittag/<tag_id>', views.edit_tag, name='edit-tag'),
+    path('deletetag/<tag_id>', views.delete_tag, name='delete-tag'),
 ]

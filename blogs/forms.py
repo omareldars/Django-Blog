@@ -1,14 +1,10 @@
 from django import forms
-from blogs.models import Posts,Categories
+from blogs.models import Posts,Categories,ForbiddenWords,Tags
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm ,AuthenticationForm ,UsernameField , PasswordChangeForm
 from django.http import  HttpResponseRedirect
 from django.core.exceptions import ValidationError
-
 from django.contrib.auth.forms import AuthenticationForm
-from django import forms
-from blogs.models import Posts,Categories,ForbiddenWords
-from django.http import HttpResponseRedirect
 
 
 class post_form(forms.ModelForm):
@@ -71,4 +67,10 @@ class ForbiddenWordForm(forms.ModelForm):
 	title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
 	class Meta:
 		model = ForbiddenWords
+		fields = ('title',)
+
+class TagForm(forms.ModelForm):
+	title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',}))
+	class Meta:
+		model = Tags
 		fields = ('title',)

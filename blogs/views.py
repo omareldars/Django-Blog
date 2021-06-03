@@ -1,8 +1,7 @@
-
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form
+from .forms import post_form, category_form, ForbiddenWordForm,TagForm
 from .models import Users, Categories, Tags, Posts, Replies, Comments, ForbiddenWords
 from .logger import log
 from .forms import RegistrationForm
@@ -11,71 +10,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 import os
 
-
-
-# Create your views here.
-
-def say_dashboard(request):
-    return render(request, 'dashboard/base.html',{})
-
-
-def say_blogs(request):
-    return render(request, 'user/blogs.html', {})
-
-
-def blog_detail(request, id):
-    post = Posts.objects.get(id = id)
-    comments = Comments.objects.filter(post=post)
-    context = {
-        "post":post,
-        "comments": comments,
-    }
-    return render(request, 'user/post-details.html', context)
-
-
-# add category
-def new_category(request):
-    form = category_form()
-    if request.method == 'POST':
-        form = category_form(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/all')
-
-    context = {'ct_form': form}
-    return render(request, 'dashboard/newcategory.html', context)
-
-
-# edit category
-def edit_category(request, category_id):
-    category = Categories.objects.get(id=category_id)
-    form = category_form(instance=category)
-    if request.method == 'POST':
-        form = category_form(request.POST, instance=category)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/all')
-
-    context = {'ct_form': form}
-    return render(request, 'dashboard/newcategory.html', context)
-
-
-# delete
-def delete_category(request, category_id):
-    category = Categories.objects.get(id=category_id)
-    category.delete()
-    return HttpResponseRedirect('/dashboard/all')
-
-
-# get all category
-def getAllCategory(request):
-    all_category = Categories.objects.all()
-    context = {'categories': all_category}
-    return render(request, 'dashboard/category.html', context)
-
-
-
-
 #register
 def register(request):
     """this custom login view does the following:
@@ -83,7 +17,7 @@ def register(request):
     2- check if the method is post and then the submitted form is valid"""
     
 
-    if(not request.user.is_authenticated):
+    if( not request.user.is_authenticated):
         if request.method == "POST":
             user_form = RegistrationForm(request.POST)
             # get the form and the upladed files
@@ -125,15 +59,6 @@ def register(request):
         return render(request, 'user/register.html', context)
     else:
         return HttpResponseRedirect("/")
-
-import requests
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form,ForbiddenWordForm
-from .models import Users, Categories, Tags, Posts, Replies, Comments, ForbiddenWords
-
-# Create your views here.
-
 
 def say_dashboard(request):
     return render(request, 'dashboard/base.html', {})
@@ -275,3 +200,43 @@ def new_post(request):
 
     context = {'p_form': form}
     return render(request, 'dashboard/newpost.html', context)
+
+# add new tag 
+def new_tag(request):
+    form = TagForm()
+    if request.method == 'POST':
+        form = TagForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/alltag/')
+    else:
+        context = {"pt_form": form}
+        return render(request,"dashboard/newtag.html",context)
+
+
+# delete
+def delete_tag(request, tag_id):
+    tag = Tags.objects.get(id=tag_id)
+    tag.delete()
+    return HttpResponseRedirect('/alltag/')
+
+
+
+# get all tags
+def getAllTag(request):
+    all_tag= Tags.objects.all()
+    context = {'tags': all_tag}
+    return render(request, 'dashboard/alltag.html', context)
+
+# edit tag
+def edit_tag(request, tag_id):
+    tag = Tags.objects.get(id=tag_id)
+    form = TagForm(instance=tag)
+    if request.method == 'POST':
+        form = TagForm(request.POST, instance=tag)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/alltag/')
+
+    context = {'pt_form': form}
+    return render(request, 'dashboard/newtag.html', context)
