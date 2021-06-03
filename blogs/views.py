@@ -1,78 +1,16 @@
-
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form
-from .models import Users, Categories, Tags, Posts, Replies, Comments, ForbiddenWords
 from .logger import log
-from .forms import RegistrationForm
+from .forms import RegistrationForm,LoginForm,ProfileForm
 from django.contrib.auth import login, authenticate,update_session_auth_hash
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from .util_funcs import isLocked
 import os
-
-
-
-# Create your views here.
-
-def say_dashboard(request):
-    return render(request, 'dashboard/base.html',{})
-
-
-def say_blogs(request):
-    return render(request, 'user/blogs.html', {})
-
-
-def blog_detail(request, id):
-    post = Posts.objects.get(id = id)
-    comments = Comments.objects.filter(post=post)
-    context = {
-        "post":post,
-        "comments": comments,
-    }
-    return render(request, 'user/post-details.html', context)
-
-
-# add category
-def new_category(request):
-    form = category_form()
-    if request.method == 'POST':
-        form = category_form(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/all')
-
-    context = {'ct_form': form}
-    return render(request, 'dashboard/newcategory.html', context)
-
-
-# edit category
-def edit_category(request, category_id):
-    category = Categories.objects.get(id=category_id)
-    form = category_form(instance=category)
-    if request.method == 'POST':
-        form = category_form(request.POST, instance=category)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/all')
-
-    context = {'ct_form': form}
-    return render(request, 'dashboard/newcategory.html', context)
-
-
-# delete
-def delete_category(request, category_id):
-    category = Categories.objects.get(id=category_id)
-    category.delete()
-    return HttpResponseRedirect('/dashboard/all')
-
-
-# get all category
-def getAllCategory(request):
-    all_category = Categories.objects.all()
-    context = {'categories': all_category}
-    return render(request, 'dashboard/category.html', context)
-
+from .forms import post_form, category_form,ForbiddenWordForm
+from .models import Categories, Tags, Posts, Replies, Comments, ForbiddenWords, Profile
+from .util_funcs import delete_profile_pic
 
 
 
@@ -86,19 +24,34 @@ def register(request):
     if(not request.user.is_authenticated):
         if request.method == "POST":
             user_form = RegistrationForm(request.POST)
+
             # get the form and the upladed files
-            # profile_form = ProfileForm(request.POST, request.FILES)
+            profile_form = ProfileForm(request.POST, request.FILES)
+            print("profile_form_data--->",profile_form.data)
             if user_form.is_valid():
                 user = user_form.save()  # save the user into database and return it
+                # p = profile_form.save()
+                # print("p---->",p)
+                print("just user--->",user)
+                print("user_form--->",user_form.data,request.FILES)
                 # get the profile of the created user
-                # profile = Profile.objects.get(user=user)
+                print("before calling profile--->")
+                profile = Profile.objects.get(user=user)
+                print("ppppppp----->",profile)
+                # profile = Profile.objects.set(user=user)
+                print("After calling profile--->")
                 # get the uplloaded picture if any
                 file = request.FILES.get("profile_pic")
-                # if(file != None):
-                #     profile.profile_pic = file  # add the provided pic to that user profile
+                print("file--->",file)
+                if(file != None):
+                    # profile_pic = file
+                    profile.profile_pic = file
+                    # profile.profile_pic = file  # add the provided pic to that user profile
+                profile.bio = request.POST["bio"]
                 # profile.bio = request.POST["bio"]
                 # profile.save()  # save the updates to user profile
-                # log(profile.profile_pic.url)
+                profile.save()
+                log(profile.profile_pic.url)
                 log("created a new user successfully with username: " +
                     user.username)  # for debugging purposes
                 user = authenticate(
@@ -119,18 +72,84 @@ def register(request):
                 log("invalid registration form")  # for debugging purposes
         else:
             user_form = RegistrationForm()
-            # profile_form = ProfileForm()
-        context = {"user_form": user_form}
-        # context = {"user_form": user_form, "profile_form": profile_form}
+            profile_form = ProfileForm()
+        # context = {"user_form": user_form}
+        context = {"user_form": user_form, "profile_form": profile_form}
         return render(request, 'user/register.html', context)
     else:
         return HttpResponseRedirect("/")
 
-import requests
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form,ForbiddenWordForm
-from .models import Users, Categories, Tags, Posts, Replies, Comments, ForbiddenWords
+
+def login_view(request):
+    """this custom login view does the following:
+    1- checks if request comes from an already logged in user so it redirects him to hompage again
+    2- check if the method is post and then the submitted form is valid
+    3- check if the credentials are correct using authenticate method 
+    4- check if user isn't registered takes him back to login back
+    5- if user is registered but locked redirects him to blocked page"""
+
+    if(not request.user.is_authenticated):  # check if user is already logged in
+        if request.method == "POST":
+            # using named parameter as request.Post isn't the first parameter by default
+            login_form = LoginForm(data=request.POST)
+            if(login_form.is_valid()):
+                username = request.POST['username']
+                password = request.POST["password"]
+                # authenticate the user with provided data
+                user = authenticate(username=username, password=password)
+                if user is not None:  # user authenticated
+                    if(isLocked(user)):
+                        log(user.username + " blocked user")
+                        # redirect the user to a custom page for blocked users
+                        return HttpResponseRedirect("/user/blocked")
+                    else:
+                        login(request, user)
+                        log(user.username + " logged in successfully")
+                        # redirect to user homepage
+                        return HttpResponseRedirect("/")
+                else:
+                    log("cannot login from login page")
+
+            else:
+                log("invalid login form")
+        else:
+            login_form = LoginForm()
+        context = {"login_form": login_form}
+        return render(request, 'user/login.html', context)
+    else:
+        return HttpResponseRedirect("/")
+
+
+def profile(request):
+    if(request.user.is_authenticated):
+        user = request.user  # get the current user
+        # get the profile related to that user
+        userprofile = Profile.objects.get(user=user)
+        context = {"user": user, "userprofile": userprofile}
+        return render(request, "user/profile.html", context)
+    else:
+        return HttpResponseRedirect("/")
+
+
+
+
+
+def blocked(request):
+    # this view will be fired when a locked user tries to login
+    if(not request.user.is_authenticated):
+        admins = User.objects.all().filter(is_staff__exact=True)
+        return render(request, "user/blocked.html", {"admins": admins})
+    return HttpResponseRedirect("/")
+
+
+
+
+
+
+
+
+
+
 
 # Create your views here.
 

@@ -2,24 +2,30 @@ import datetime
 from django.utils import timezone
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
-class Users(models.Model):
-    fname = models.CharField(max_length=50)
-    lname = models.CharField(max_length=50)
-    username = models.CharField(max_length=70)
-    email = models.EmailField()
-    age = models.IntegerField(default=18, validators=[MaxValueValidator(60), MinValueValidator(18)])
-    is_blocked = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+fs = FileSystemStorage()
 
-    def __str__(self):
-        return self.fname + ' ' + self.lname
+# class Users(models.Model):
+#     fname = models.CharField(max_length=50)
+#     lname = models.CharField(max_length=50)
+#     username = models.CharField(max_length=70)
+#     email = models.EmailField()
+#     age = models.IntegerField(default=18, validators=[MaxValueValidator(60), MinValueValidator(18)])
+#     is_blocked = models.BooleanField(default=False)
+#     is_admin = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return self.fname + ' ' + self.lname
 
 # Create your models here.
 class Categories(models.Model):
     title = models.CharField(max_length=100)
-    users = models.ManyToManyField(Users, null=True, blank=True)
+    users = models.ManyToManyField(User, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -44,14 +50,14 @@ class ForbiddenWords(models.Model):
 class Posts(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    likes = models.ManyToManyField(Users, related_name="likes")
-    dislikes = models.ManyToManyField(Users, related_name="dislikes")
+    likes = models.ManyToManyField(User, related_name="likes")
+    dislikes = models.ManyToManyField(User, related_name="dislikes")
     picture = models.ImageField(null=True, blank=True)
     # created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(auto_now_add=True)
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
-    author = models.ForeignKey(Users, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
     category = models.ManyToManyField(Categories, related_name='posts')
 
@@ -69,7 +75,7 @@ class Comments(models.Model):
     content = models.TextField()
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, related_name="comments", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -78,10 +84,36 @@ class Comments(models.Model):
 
 class Replies(models.Model):
     content = models.TextField()
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comments, related_name="replies", on_delete=models.CASCADE, null=True)
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
 
     def __str__(self):
         return self.content
+
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(
+        verbose_name="profile picture", storage=fs, default='defaultImage.png')
+    # the cumulative number of undesiredwords the user has used
+    undesired_words_count = models.IntegerField(default=0)
+    # determine whether the user is locked or not
+    is_locked = models.BooleanField(default=False)
+    bio = models.TextField(max_length=200, default="")
+
+    def __str__(self):
+        return self.user.username
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

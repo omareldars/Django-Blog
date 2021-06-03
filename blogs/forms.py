@@ -4,11 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm ,AuthenticationForm ,UsernameField , PasswordChangeForm
 from django.http import  HttpResponseRedirect
 from django.core.exceptions import ValidationError
-
-from django.contrib.auth.forms import AuthenticationForm
-from django import forms
 from blogs.models import Posts,Categories,ForbiddenWords
-from django.http import HttpResponseRedirect
+from .models import Profile
 
 
 class post_form(forms.ModelForm):
@@ -65,6 +62,29 @@ class RegistrationForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise ValidationError("Email already used before.. try another one")
         return self.cleaned_data
+
+
+
+class ProfileForm(forms.ModelForm):
+
+    """custom profile form in order to handle the extra fields added to user profile (profile picture)
+        will be provided through the form till now .. the other extra fields will be controlled from 
+        else where """
+
+    profile_pic =forms.ImageField(required=False)
+    bio = forms.CharField(required = False ,widget=forms.Textarea(attrs={"rows":5, "cols":20 ,  'class':'form-control'}))
+    class Meta:
+        model = Profile
+        fields = ["bio",'profile_pic']
+
+class LoginForm(AuthenticationForm): 
+    
+    """custom login form in order to be used with login view"""
+
+    username = UsernameField(
+        widget=forms.TextInput(attrs={'class': 'input100', 'autofocus': True, 'placeholder': 'username'})
+    )
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input100', 'placeholder': 'password'}))
 
 
 class ForbiddenWordForm(forms.ModelForm):
