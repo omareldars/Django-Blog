@@ -22,7 +22,7 @@ def register(request):
     if( not request.user.is_authenticated):
         if request.method == "POST":
             user_form = RegistrationForm(request.POST)
-
+            print(user_form.is_valid())
             # get the form and the upladed files
             profile_form = ProfileForm(request.POST, request.FILES)
             print("profile_form_data--->",profile_form.data)
@@ -165,7 +165,7 @@ def blog_detail(request, id):
     comments = Comments.objects.filter(post=post)
     context = {
         "post": post,
-        # "comments": comments,
+        "comments": comments,
     }
     return render(request, 'user/post-details.html', context)
 
