@@ -252,31 +252,31 @@ def edit_forbiden_word(request, word_id):
 # take comment text to be replaced with the original comment on post
 
 
-def check_forbidden_words_in_comment(request, content):
-    content_arr = content.split(",")
-    all_forbidden_words = ForbiddenWords.objects.all()
-    for word in all_forbidden_words:
-        replaced = ""
-        if content.find(word.title):
-            for c in word.title:
-                replaced += "*"
-            content = content.replace(word.title, replaced)
+# def check_forbidden_words_in_comment(request, content):
+#     content_arr = content.split(",")
+#     all_forbidden_words = ForbiddenWords.objects.all()
+#     for word in all_forbidden_words:
+#         replaced = ""
+#         if content.find(word.title):
+#             for c in word.title:
+#                 replaced += "*"
+#             content = content.replace(word.title, replaced)
 
-    return HttpResponseRedirect('/forbidden_words/')
+#     return HttpResponseRedirect('/forbidden_words/')
 
 
-def check_profanity(content):
-    filtered = ''
-    first_word = True
-    for word in content.split():
-        if not first_word:
-            filtered += ' '
-        first_word = False
-        if ForbiddenWords.objects.filter(title=word.lower()):
-            filtered += ('*' * len(word))
-        else:
-            filtered += word
-    return filtered
+# def check_profanity(content):
+#     filtered = ''
+#     first_word = True
+#     for word in content.split():
+#         if not first_word:
+#             filtered += ' '
+#         first_word = False
+#         if ForbiddenWords.objects.filter(title=word.lower()):
+#             filtered += ('*' * len(word))
+#         else:
+#             filtered += word
+#     return filtered
 
 # # new post
 # def new_post(request):
@@ -464,3 +464,59 @@ def user_delete(request, user_id):
     user = User.objects.get(id=user_id)
     user.delete()
     return HttpResponseRedirect('/alluser/')
+
+
+def promote_to_staff(user):
+    """this function can be used to promot a normal user to be a staff user with the required permissions"""
+    user.is_staff = True
+    user.save()
+
+
+def promote_to_super_user(user):
+    promote_to_staff(user)
+    user.is_superuser = True
+    user.save()
+
+
+def is_authorized_admin(request):
+    if(request.user.is_authenticated):
+        if(request.user.is_staff):
+            return True
+    return False
+
+
+def manager_promote_user(request, id):
+    """promote a specific user to become an admin with all determined permissions
+    @params : request  , id"""
+
+    if(is_authorized_admin(request)):
+        user = User.objects.get(pk=id)
+        promote_to_staff(user)
+        log(request.user.username+" promoted " + user.username+".")
+        return HttpResponseRedirect("/alluser/")
+    else:
+        return HttpResponseRedirect("/")
+
+
+def promote(request, id):
+    return manager_promote_user(request, id)
+
+
+def super_promote_admin(request, id):
+    """promote a specific admin to become a super user with the highest permissions
+    @params : request  , id"""
+
+    current_user = request.user
+    if(is_authorized_admin(request)):
+        if(current_user.is_superuser):
+            user = User.objects.get(pk=id)
+            promote_to_super_user(user)
+            log(current_user.username+" promoted " +
+                user.username+" to a super user.")
+        return HttpResponseRedirect("/alluser/")
+    else:
+        return HttpResponseRedirect("/")
+
+
+def promote_admin_to_super(request, id):
+    return super_promote_admin(request, id)

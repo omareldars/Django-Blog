@@ -14,7 +14,7 @@
     <th>Email</th>
     <th>Join Date</th>
     <th>Last Login</th>
-    <th span="3">Actions</th>
+    <th span="6">Actions</th>
     {% for user in all_user %}
 
     <tr>
@@ -45,13 +45,24 @@
         >
       </td>
       <td>
-        <a href="#"
+        <a href="{%url 'promote' user.id %}"
           ><button
             type="button"
             class="btn btn-success"
             onclick="return confirm('are you sure ?');"
           >
-            Promote
+            PromoteUser
+          </button></a
+        >
+      </td>
+      <td>
+        <a href="{%url 'promote_admin' user.id %}"
+          ><button
+            type="button"
+            class="btn btn-success"
+            onclick="return confirm('are you sure ?');"
+          >
+            PromoteAdmin
           </button></a
         >
       </td>

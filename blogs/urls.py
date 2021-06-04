@@ -33,4 +33,9 @@ urlpatterns = [
     path('unsubscribe/<cat_id>', views.unsubscribe),
     path('deleteuser/<user_id>', views.user_delete, name='delete-user'),
     path('alluser/', views.getAllUser, name="all-user"),
+    # path("admins/promote/<int:id>",
+    #      views.promote_admin_to_super, name="promote_admin"),
+    path("users/promote/<int:id>/", views.promote, name="promote"),
+    path("admins/promote/<int:id>",
+         views.promote_admin_to_super, name="promote_admin"),
 ]
