@@ -3,7 +3,7 @@
 <div class="container text-center">
   <br /><br />
   <button class="btn btn-success">
-    <a style="color: white" href="#">Add New User</a>
+    <a style="color: white" href="/register">Add New User</a>
   </button>
 </div>
 <br /><br />
@@ -14,7 +14,7 @@
     <th>Email</th>
     <th>Join Date</th>
     <th>Last Login</th>
-    <th span="3">Actions</th>
+    <th span="6">Actions</th>
     {% for user in all_user %}
 
     <tr>
@@ -22,11 +22,13 @@
       <td>{{user.email}}</td>
       <td>{{user.date_joined}}</td>
       <td>{{user.last_login}}</td>
-      <td><a class="btn btn-primary" href="#">Edit</a></td>
+      <td>
+        <a class="btn btn-primary" href="#">Edit</a>
+      </td>
       <td>
         <a
           class="btn btn-danger"
-          href="#"
+          href="{%url 'delete-user' user.id %}"
           onclick="return confirm('are you sure ?');"
           >Delete</a
         >
@@ -43,13 +45,24 @@
         >
       </td>
       <td>
-        <a href="#"
+        <a href="{%url 'promote' user.id %}"
           ><button
             type="button"
             class="btn btn-success"
             onclick="return confirm('are you sure ?');"
           >
-            Promote
+            PromoteUser
+          </button></a
+        >
+      </td>
+      <td>
+        <a href="{%url 'promote_admin' user.id %}"
+          ><button
+            type="button"
+            class="btn btn-success"
+            onclick="return confirm('are you sure ?');"
+          >
+            PromoteAdmin
           </button></a
         >
       </td>
