@@ -150,6 +150,20 @@ baiomy_1 logged in successfully
 baiomy_1 logged in successfully
 
 baiomy_1 logged in successfully
+<<<<<<< HEAD
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+valid edit form
+no picunsupported operand type(s) for +: 'PosixPath' and 'str'
+baiomy_1  updated his profile
+valid edit form
+no picunsupported operand type(s) for +: 'PosixPath' and 'str'
+baiomy_1  updated his profile
+changed password for baiomy_1
+changed password for baiomy_1
+invalid login form
+baiomy_1 logged in successfully
+=======
 >>>>>>> 24742b337b27d58ae6c6e22fc00196f7003f52af
 /images/defaultImage.png
 created a new user successfully with username: asmaaelalfy2
@@ -171,6 +185,7 @@ asmaa logged in successfully
 admin logged in successfully
 admin promoted asmaa.
 admin promoted asmaa to a super user.
+<<<<<<< HEAD
 /images/customer-2.png
 created a new user successfully with username: ekhlasmohamed
 admin logged in successfully
@@ -183,3 +198,8 @@ admin unlocked asmaaali.
 admin unlocked asmaaali.
 admin locked asmaaali.
 admin unlocked asmaaali.
+=======
+>>>>>>> 72da81850a12820a0a44466c31507dd17f7535a4
+baiomy_1 logged in successfully
+>>>>>>> 6e9fd8d4711308f1517ca6fdbf5c8fa86b02dcc4
+admin logged in successfully

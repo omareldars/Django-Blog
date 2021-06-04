@@ -120,11 +120,20 @@ class EditProfileForm(forms.ModelForm):
 
     """form to update user profile info [password , email , username] aren't included"""
 
-    first_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input100'}))
-    last_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input100'}))
-
+    first_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'input100'}))
+    last_name =forms.CharField(widget=forms.TextInput(attrs={'class': 'input100'}))
     class Meta:
         model = User
-        fields = ["first_name", "last_name"]
+        fields =["first_name","last_name"]
+
+
+class ChangePasswordForm(PasswordChangeForm):
+
+    """ form to update user password (old password is required)"""
+
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input100', 'placeholder': 'old password'}))
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input100','placeholder': 'Enter new password'}),
+    label="password",help_text="at least 8 charachters , numbers , symbols or better mix them")
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input100','placeholder': 'Confirm your password'}),
+    label="confirm password")
+    
