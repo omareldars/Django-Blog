@@ -45,6 +45,9 @@ urlpatterns = [
     path("admins/promote/<int:id>",
          views.promote_admin_to_super, name="promote_admin"),
     path("lockuser/<int:id>/", views.lock, name="lock"),
-    path("unlockuser/<int:id>/", views.unlock, name="unlock"),     
-   
+    path("unlockuser/<int:id>/", views.unlock, name="unlock"),
+    path('like_post/<post_id>', views.like_post, name="like"),
+    path('dislike_post/<post_id>', views.dislike_post, name="dislike"),
+    path('deletecomment/<post_id>/<com_id>', views.commentDelete, name='comment-delete'),
+    path('editcomment/<int:id>/', views.commentEdit, name='edit-comment'),
 ]

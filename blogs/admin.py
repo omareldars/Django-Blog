@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Categories, Tags, Posts, Replies, Comments, ForbiddenWords
+from .models import Categories, Tags, Posts, Comments, ForbiddenWords
 from .models import Profile
 from django.contrib.auth.models import User
 
 # Register your models here.
 class CustomPost(admin.ModelAdmin):
-    fieldsets = (['write post', {'fields': ['title', 'content', 'picture', 'author', 'tags']}],
+    fieldsets = (['write post', {'fields': ['title', 'content', 'picture', 'author', 'tag']}],
                  ['likes', {'fields': ['likes']}], ['dislikes', {'fields': ['dislikes']}])
     list_display = ['title', 'content', 'picture', 'created_at']
     list_filter = ['created_at', 'title']
@@ -15,7 +15,6 @@ class CustomPost(admin.ModelAdmin):
 admin.site.register(Categories)
 admin.site.register(Tags)
 admin.site.register(Posts, CustomPost)
-admin.site.register(Replies)
 admin.site.register(Comments)
 admin.site.register(ForbiddenWords)
 

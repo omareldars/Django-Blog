@@ -1,16 +1,26 @@
 import requests
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form, ForbiddenWordForm,TagForm, RegistrationForm,LoginForm,ProfileForm, EditProfileForm, ChangePasswordForm
+from .forms import post_form, category_form, ForbiddenWordForm,TagForm, RegistrationForm,LoginForm,ProfileForm, EditProfileForm, ChangePasswordForm, Comments_Form
 from .logger import log
 from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from .util_funcs import isLocked
 import os
-from .models import Categories, Tags, Posts, Replies, Comments, ForbiddenWords, Profile
+from .models import Categories, Tags, Posts, Comments, ForbiddenWords, Profile
 from .util_funcs import delete_profile_pic
 from .util_funcs import *
+
+
+
+
+
+# about us page
+def about(request):
+    return render(request, 'user/about.html')
+
+
 
 # register
 def register(request):
@@ -157,12 +167,38 @@ def say_blogs(request):
     return render(request, 'user/blogs.html', context)
 
 
+
+# view blog-details and create comment or reply on purpose
 def blog_detail(request, id):
     post = Posts.objects.get(id=id)
-    comments = Comments.objects.filter(post=post)
-    context = {
-        "post": post,
-        "comments": comments,
+    categories = Categories.objects.all()
+    tags = Tags.objects.all()
+    user = request.user
+    forbidden = ForbiddenWords.objects.all()
+    comments = Comments.objects.filter(post=post).order_by('-id')
+    if request.method == 'POST':
+        comment_form = Comments_Form(request.POST or None)
+        if comment_form.is_valid():
+            content = request.POST.get('content')
+            for word in forbidden:
+                if word in content:
+                    user.profile.undesired_words_count +=1
+                    user.profile.save()
+            reply_id = request.POST.get('comment_id')
+            comment_qs = None
+            if reply_id:
+                comment_qs = Comments.objects.get(id=reply_id)
+            Comments.objects.create(post=post, user=user, content=content, reply=comment_qs)
+            comment_form = Comments_Form()
+    else:
+        comment_form = Comments_Form()
+        context = {
+            "post": post,
+            "comments": comments,
+            "comment_form": comment_form,
+            "categories": categories,
+            "tags": tags,
+            "user": user
     }
     return render(request, 'user/post-details.html', context)
 
@@ -502,6 +538,63 @@ def getAllUser(request):
     return render(request, 'dashboard/alluser.html', context)
 
 
+# like post
+def like_post(request, id):
+    post = get_object_or_404(Posts, pk=id)
+    post_likes = post.total_likes()
+    post_disliked = post.total_dislikes()
+    user = request.user
+    if (user not in post_likes):
+        if(user not in post_disliked):
+            post.likes.add(user)
+            post.save()
+    else:
+        post.likes.remove(user)
+        post.save()
+    return HttpResponseRedirect("/post/"+id)
+
+
+
+# post dislikes and auto delete after 10 dislikes
+def dislike_post(request, id):
+    post = get_object_or_404(Posts, pk=id)
+    post_likes = post.total_likes()
+    post_disliked = post.total_dislikes()
+    user = request.user
+    if (user not in post_disliked):
+        if(user not in post_likes):
+            post.dislikes.add(user)
+            post.save()
+    else:
+        post.dislikes.remove(user)
+        post.save()
+    total = post.total_dislikes()
+    if(total == 10):
+        post.delete()
+        return HttpResponse("<h1> this post has been deleted </h1>")
+    return HttpResponseRedirect("/post/"+id)
+
+
+# edit comment
+def commentEdit(request, id):
+    comment = Comments.objects.get(id=id)
+    if request.method == 'POST':
+        form = Comments_Form(request.POST, instance=comment.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('deletecomment')
+    else:
+        form = Comments_Form(instance=comment)
+    return render(request, 'post_detail.html', {'form': form})
+
+# delete comment
+def commentDelete(request, post_id, com_id):
+    comment = Comments.objects.get(id=com_id)
+    comment.delete()
+    return HttpResponseRedirect('/post/'+post_id)
+
+
+
 
     
 
@@ -543,6 +636,8 @@ def edit_profile(request):
             profile_form = ProfileForm(data=bio_data)
             context = {"edit_form": edit_form, "profile_form": profile_form}
             return render(request, "user/edit.html", context)
+
+
 # delete user
 def user_delete(request, user_id):
     user = User.objects.get(id=user_id)
@@ -606,6 +701,9 @@ def change_password(request):
         })
     else:
         return HttpResponseRedirect("/")
+
+
+
 def promote(request, id):
     return manager_promote_user(request, id)
 
