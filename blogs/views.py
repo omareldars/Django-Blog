@@ -142,7 +142,10 @@ def blocked(request):
 
 
 def say_dashboard(request):
-    return render(request, 'dashboard/base.html', {})
+    if(is_authorized_admin(request)):
+       return render(request, 'dashboard/base.html', {})
+    return HttpResponseRedirect("/")
+
 
 
 def say_blogs(request):
