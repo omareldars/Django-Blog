@@ -248,6 +248,13 @@ created a new user successfully with username: ayaa_ali
 ayaa_ali logged in successfully
 admin logged in successfully
 admin unlocked ekhlasmohamed.
+<<<<<<< HEAD
+>>>>>>> 38bf3ebb5b249b2e35b8134c80942f2ad653f924
+baiomy_1 logged in successfully
+ahmedelbaiomy logged in successfully
+couldn't send email message'User' object has no attribute 'fname'
+couldn't send email message'User' object has no attribute 'fname'
+=======
 admin logged in successfully
 valid edit form
 no picunsupported operand type(s) for +: 'PosixPath' and 'str'
@@ -259,3 +266,6 @@ no picunsupported operand type(s) for +: 'PosixPath' and 'str'
 valid edit form
 no picunsupported operand type(s) for +: 'PosixPath' and 'str'
 admin  updated his profile
+>>>>>>> 2e2c9713f335c5cb0e3026321319cd27e35360bb
+baiomy_1 logged in successfully
+ahmedelbaiomy logged in successfully

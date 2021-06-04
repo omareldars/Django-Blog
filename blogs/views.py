@@ -11,6 +11,7 @@ import os
 from .models import Categories, Tags, Posts, Comments, ForbiddenWords, Profile
 from .util_funcs import delete_profile_pic
 from .util_funcs import *
+from django.core.paginator import Paginator
 
 
 
@@ -157,13 +158,29 @@ def say_dashboard(request):
     return HttpResponseRedirect("/")
 
 
+def posts(request):
+    posts = Posts.objects.all()
+    popular_posts = Posts.objects.order_by('-likes')[:5]
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    categotries = Categories.objects.all()
+    tags = Tags.objects.all()[:10]
+    user = request.user
+
+    context = {'page_obj': page_obj, 'categories': categotries,
+               'tags': tags, 'user': user, 'popular_posts': popular_posts, 'posts':posts}
+    return render(request, 'user/blogs.html', context)
+
+
 
 def say_blogs(request):
     all_categories = Categories.objects.all()
     # category = Categories.objects.get(id=cat_id)
     # cat_user = Categories.objects.from_queryset(users=request.user)
+    posts=Posts.objects.all()
     user = request.user
-    context = {'categories': all_categories,  'user': user}
+    context = {'categories': all_categories,  'user': user, 'post':posts}
     return render(request, 'user/blogs.html', context)
 
 

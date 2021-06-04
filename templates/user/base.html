@@ -30,7 +30,8 @@
 <!-- {# here will be title block #} -->
     {% block page_content %}
     {% endblock %}
-{# here we must include footer #}
+<!-- {# here we must include footer #} -->
+    {% include "user/footer.html" %}
 
 
 <script src="{% static 'dist/vendor/jquery/jquery-3.2.1.min.js' %}" ></script>
