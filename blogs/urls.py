@@ -30,4 +30,5 @@ urlpatterns = [
     path('deletetag/<tag_id>', views.delete_tag, name='delete-tag'),
     path('subscribe/<cat_id>', views.subscribe),
     path('unsubscribe/<cat_id>', views.unsubscribe),
+    path('alluser',views.getAllUser,name="all-user")
 ]

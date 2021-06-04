@@ -1,0 +1,65 @@
+{% extends 'dashboard/base.html' %} {% block title_block %}
+<h2 style="text-align: center">All Users</h2>
+<div class="container text-center">
+  <br /><br />
+  <button class="btn btn-success">
+    <a style="color: white" href="#">Add New User</a>
+  </button>
+</div>
+<br /><br />
+{% endblock %} {% block main_block %}
+<div class="container">
+  <table class="table table-dark">
+    <th>Username</th>
+    <th>Email</th>
+    <th>Join Date</th>
+    <th>Last Login</th>
+    <th span="3">Actions</th>
+    {% for user in all_user %}
+
+    <tr>
+      <td>{{user.username}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.date_joined}}</td>
+      <td>{{user.last_login}}</td>
+      <td><a class="btn btn-primary" href="#">Edit</a></td>
+      <td>
+        <a
+          class="btn btn-danger"
+          href="#"
+          onclick="return confirm('are you sure ?');"
+          >Delete</a
+        >
+      </td>
+      <td>
+        <a href="#"
+          ><button
+            type="button"
+            class="btn btn-danger"
+            onclick="return confirm('are you sure ?');"
+          >
+            Block
+          </button></a
+        >
+      </td>
+      <td>
+        <a href="#"
+          ><button
+            type="button"
+            class="btn btn-success"
+            onclick="return confirm('are you sure ?');"
+          >
+            Promote
+          </button></a
+        >
+      </td>
+      <td>
+        <a href="#"
+          ><button type="button" class="btn btn-primary">Unblock</button></a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

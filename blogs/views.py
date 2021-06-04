@@ -452,3 +452,13 @@ def edit_post(request, post_id):
         form = post_form(instance=post)
         context = {"p_form": form}
         return render(request, "dashboard/newpost.html", context)
+
+
+
+
+#all user
+
+def getAllUser(request):
+    all_user =User.objects.all()
+    context = {'all_user': all_user}
+    return render(request, 'dashboard/alluser.html', context)
