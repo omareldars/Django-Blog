@@ -51,9 +51,9 @@ class ForbiddenWords(models.Model):
 class Posts(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    likes = models.ManyToManyField(User, related_name="likes",blank=True)
-    dislikes = models.ManyToManyField(User, related_name="dislikes",blank=True)
-    picture = models.ImageField(null=True, blank=True)
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
+    dislikes = models.ManyToManyField(User, related_name="dislikes", blank=True)
+    picture = models.ImageField(null=True, blank=True, storage=fs, verbose_name="profile picture")
     # created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(auto_now_add=True)
     created_at = datetime.datetime.now()

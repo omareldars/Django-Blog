@@ -13,7 +13,11 @@
         <p>Content: {{ post.content | linebreaks }}</p>
         <p>Likes: {{ post.total_likes }} |&nbsp; Dislikes: {{ post.total_dislikes }}</p>
         <p>Tags: {{ post.tag }}</p>
-        <img src="{{ post.picture.url }}" alt="image" width="500" height="600">
+        {% if post.picture %}
+            <img src="{{ post.picture.url }}" alt="post image" width="500" height="600">
+        {% else %}
+            <img src="static/images/images.png" alt="alt image" width="500" height="600">
+        {% endif %}
         <p>{{ post.author }}</p>
         <h3> Leave a comment:</h3>
         <form action="/blog/{{ post.id }}/" method="post">

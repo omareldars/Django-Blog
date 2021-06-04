@@ -142,7 +142,10 @@ def blocked(request):
 
 
 def say_dashboard(request):
-    return render(request, 'dashboard/base.html', {})
+    if(is_authorized_admin(request)):
+       return render(request, 'dashboard/base.html', {})
+    return HttpResponseRedirect("/")
+
 
 
 def say_blogs(request):
@@ -400,15 +403,44 @@ def unsubscribe(request, cat_id):
 
 def new_post(request):
     form = post_form()
+    user_id = request.user.id
+    print("user_id--->", user_id, "\n \n \n")
     if request.method == 'POST':
-        form = post_form(request.POST)
+        form = post_form(request.POST, request.FILES)
+        print("Photo---->", request.FILES, "\n \n \n")
+        post = form.save()
+        print("post---->", post, "\n \n \n")
+        # print("form-1--->", form, "\n \n \n")
+        post.user_id = user_id
+        # print("form-2--->", form, "\n \n \n")
         if form.is_valid():
             form.save()
+            post.save()
             return HttpResponseRedirect('/allpost/')
 
     context = {'p_form': form}
     return render(request, 'dashboard/newpost.html', context)
 
+
+
+
+# def new_post(request):
+#     form = post_form()
+#     # user_id = request.user.id
+#     # print(user_id)
+#     if request.method == 'POST':
+#         form = post_form(request.POST, request.FILES)
+#         post = form.save(commit=False)
+#         print(form)
+#         # post.user_id = int(user_id)
+#         # print(form)
+#         if form.is_valid():
+#             post.save()
+#             return HttpResponseRedirect(
+#                 '#')
+
+#     context = {'p_form': form}
+#     return render(request, 'dashboard/newpost.html', context)
 
 # delete post
 def post_delete(request, post_id):
