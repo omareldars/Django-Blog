@@ -10,7 +10,7 @@ from .util_funcs import isLocked
 import os
 from .models import Categories, Tags, Posts, Replies, Comments, ForbiddenWords, Profile
 from .util_funcs import delete_profile_pic
-
+from .util_funcs import *
 
 # register
 def register(request):
@@ -520,3 +520,41 @@ def super_promote_admin(request, id):
 
 def promote_admin_to_super(request, id):
     return super_promote_admin(request, id)
+
+#lock user
+def lock_user(user):
+    profile = Profile.objects.get(user=user)
+    profile.is_locked = True
+    profile.save()
+
+#unlock user
+def unlock_user(user):
+    profile = Profile.objects.get(user=user)
+    profile.is_locked = False
+    profile.save()
+
+
+
+def admin_lock_user(request, id):
+    if(is_authorized_admin(request)):
+        user = User.objects.get(pk=id)
+        lock_user(user)
+        log(request.user.username+" locked " + user.username+".")
+        return HttpResponseRedirect("/alluser")
+    else:
+        return HttpResponseRedirect("/")
+
+def admin_unlock_user(request, id):
+    if(is_authorized_admin(request)):
+        user = User.objects.get(pk=id)
+        unlock_user(user)
+        log(request.user.username+" unlocked " + user.username+".")
+        return HttpResponseRedirect("/alluser")
+    else:
+        return HttpResponseRedirect("/")
+
+def lock(request, id):
+    return admin_lock_user(request, id)
+
+def unlock(request, id):
+    return admin_unlock_user(request, id)

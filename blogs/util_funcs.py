@@ -4,16 +4,15 @@ import os
 from blogs.logger import log
 
 
-def promote_to_staff(user):
-    """this function can be used to promot a normal user to be a staff user with the required permissions"""
-    user.is_staff = True
-    user.save()
+# def promote_to_staff(user):
+#     user.is_staff = True
+#     user.save()
 
 
-def promote_to_super_user(user):
-    promote_to_staff(user)
-    user.is_superuser = True
-    user.save()
+# def promote_to_super_user(user):
+#     promote_to_staff(user)
+#     user.is_superuser = True
+#     user.save()
 
 
 def lock_user(user):
