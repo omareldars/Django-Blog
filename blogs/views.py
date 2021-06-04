@@ -12,6 +12,8 @@ from .models import Categories, Tags, Posts, Comments, ForbiddenWords, Profile
 from .util_funcs import delete_profile_pic
 from .util_funcs import *
 from django.core.paginator import Paginator
+from django.db.models import Q
+
 
 
 
