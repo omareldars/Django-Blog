@@ -1,9 +1,9 @@
 import requests
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form, ForbiddenWordForm,TagForm, RegistrationForm,LoginForm,ProfileForm
+from .forms import post_form, category_form, ForbiddenWordForm, TagForm, EditProfileForm, RegistrationForm, LoginForm, ProfileForm
 from .logger import log
-from django.contrib.auth import login, authenticate,update_session_auth_hash
+from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from .util_funcs import isLocked
@@ -12,36 +12,36 @@ from .models import Categories, Tags, Posts, Replies, Comments, ForbiddenWords, 
 from .util_funcs import delete_profile_pic
 
 
-#register
+# register
 def register(request):
     """this custom login view does the following:
     1- checks if request comes from an already logged in user so it redirects him to hompage again
     2- check if the method is post and then the submitted form is valid"""
-    
+
     print(request.POST)
-    if( not request.user.is_authenticated):
+    if(not request.user.is_authenticated):
         if request.method == "POST":
             user_form = RegistrationForm(request.POST)
             print(user_form.is_valid())
 
             # get the form and the upladed files
             profile_form = ProfileForm(request.POST, request.FILES)
-            print("profile_form_data--->",profile_form.data,profile_form.files)
+            print("profile_form_data--->", profile_form.data, profile_form.files)
             if user_form.is_valid():
                 user = user_form.save()  # save the user into database and return it
                 # p = profile_form.save()
                 # print("p---->",p)
-                print("just user--->",user)
-                print("user_form--->",user_form.data,request.FILES)
+                print("just user--->", user)
+                print("user_form--->", user_form.data, request.FILES)
                 # get the profile of the created user
                 print("before calling profile--->")
                 profile = Profile.objects.get(user=user)
-                print("ppppppp----->",profile)
+                print("ppppppp----->", profile)
                 # profile = Profile.objects.set(user=user)
                 print("After calling profile--->")
                 # get the uplloaded picture if any
                 file = request.FILES.get("profile_pic")
-                print("file--->",file)
+                print("file--->", file)
                 if(file != None):
                     # profile_pic = file
                     profile.profile_pic = file
@@ -130,24 +130,12 @@ def profile(request):
         return HttpResponseRedirect("/")
 
 
-
-
-
 def blocked(request):
     # this view will be fired when a locked user tries to login
     if(not request.user.is_authenticated):
         admins = User.objects.all().filter(is_staff__exact=True)
         return render(request, "user/blocked.html", {"admins": admins})
     return HttpResponseRedirect("/")
-
-
-
-
-
-
-
-
-
 
 
 # Create your views here.
@@ -164,8 +152,6 @@ def say_blogs(request):
     user = request.user
     context = {'categories': all_categories,  'user': user}
     return render(request, 'user/blogs.html', context)
-
-
 
 
 def blog_detail(request, id):
@@ -218,7 +204,9 @@ def getAllCategory(request):
     context = {'categories': all_category}
     return render(request, 'dashboard/category.html', context)
 
-#add forbiden word
+# add forbiden word
+
+
 def add_forbiden_word(request):
     form = ForbiddenWordForm()
     if request.method == 'POST':
@@ -228,21 +216,27 @@ def add_forbiden_word(request):
             return HttpResponseRedirect('/allforbidden/')
     else:
         context = {"pt_form": form}
-        return render(request,"dashboard/newforbiden.html",context)
+        return render(request, "dashboard/newforbiden.html", context)
 
-#delete forbidden word 
+# delete forbidden word
+
+
 def delete_forbiden_word(request, word_id):
-   title = ForbiddenWords.objects.get(id=word_id)
-   title.delete()
-   return HttpResponseRedirect('/allforbidden/')
+    title = ForbiddenWords.objects.get(id=word_id)
+    title.delete()
+    return HttpResponseRedirect('/allforbidden/')
 
 # get all forbiden word
+
+
 def getAllWord(request):
-    all_word= ForbiddenWords.objects.all()
+    all_word = ForbiddenWords.objects.all()
     context = {'words': all_word}
     return render(request, 'dashboard/allword.html', context)
 
 # edit word
+
+
 def edit_forbiden_word(request, word_id):
     word = ForbiddenWords.objects.get(id=word_id)
     form = ForbiddenWordForm(instance=word)
@@ -255,16 +249,18 @@ def edit_forbiden_word(request, word_id):
     context = {'pt_form': form}
     return render(request, 'dashboard/newforbiden.html', context)
 
-#take comment text to be replaced with the original comment on post
+# take comment text to be replaced with the original comment on post
+
+
 def check_forbidden_words_in_comment(request, content):
     content_arr = content.split(",")
     all_forbidden_words = ForbiddenWords.objects.all()
     for word in all_forbidden_words:
-        replaced=""
+        replaced = ""
         if content.find(word.title):
             for c in word.title:
-                replaced+="*"
-            content= content.replace(word.title,replaced)
+                replaced += "*"
+            content = content.replace(word.title, replaced)
 
     return HttpResponseRedirect('/forbidden_words/')
 
@@ -276,7 +272,7 @@ def check_profanity(content):
         if not first_word:
             filtered += ' '
         first_word = False
-        if ForbiddenWords.objects.filter(title = word.lower()):
+        if ForbiddenWords.objects.filter(title=word.lower()):
             filtered += ('*' * len(word))
         else:
             filtered += word
@@ -301,7 +297,9 @@ def check_profanity(content):
 #     context = {'p_form': form}
 #     return render(request, 'dashboard/newpost.html', context)
 
-# add new tag 
+# add new tag
+
+
 def new_tag(request):
     form = TagForm()
     if request.method == 'POST':
@@ -311,7 +309,7 @@ def new_tag(request):
             return HttpResponseRedirect('/alltag/')
     else:
         context = {"pt_form": form}
-        return render(request,"dashboard/newtag.html",context)
+        return render(request, "dashboard/newtag.html", context)
 
 
 # delete
@@ -321,14 +319,15 @@ def delete_tag(request, tag_id):
     return HttpResponseRedirect('/alltag/')
 
 
-
 # get all tags
 def getAllTag(request):
-    all_tag= Tags.objects.all()
+    all_tag = Tags.objects.all()
     context = {'tags': all_tag}
     return render(request, 'dashboard/alltag.html', context)
 
 # edit tag
+
+
 def edit_tag(request, tag_id):
     tag = Tags.objects.get(id=tag_id)
     form = TagForm(instance=tag)
@@ -343,9 +342,6 @@ def edit_tag(request, tag_id):
 
 
 # Categories
-
-
-
 
 
 # def subscribe_category(request, c_id):
@@ -380,8 +376,6 @@ def edit_tag(request, tag_id):
 #     category = Categories.objects.get(fk=u_id)
 
 
-
-
 def subscribe(request, cat_id):
     user = request.user
     category = Categories.objects.get(id=cat_id)
@@ -402,6 +396,8 @@ def unsubscribe(request, cat_id):
     return HttpResponseRedirect('/')
 
 # add category
+
+
 def new_post(request):
     form = post_form()
     if request.method == 'POST':
@@ -414,9 +410,6 @@ def new_post(request):
     return render(request, 'dashboard/newpost.html', context)
 
 
-
-
-
 # delete post
 def post_delete(request, post_id):
     post = Posts.objects.get(id=post_id)
@@ -424,12 +417,16 @@ def post_delete(request, post_id):
     return HttpResponseRedirect('/allpost/')
 
 # get all posts
+
+
 def getAllPost(request):
     all_post = Posts.objects.all()
     context = {'posts': all_post}
     return render(request, 'dashboard/post.html', context)
 
-#edit post
+# edit post
+
+
 def edit_post(request, post_id):
     post = get_object_or_404(Posts, id=post_id)
     if request.method == 'POST':
@@ -454,11 +451,16 @@ def edit_post(request, post_id):
         return render(request, "dashboard/newpost.html", context)
 
 
-
-
-#all user
+# all user
 
 def getAllUser(request):
-    all_user =User.objects.all()
+    all_user = User.objects.all()
     context = {'all_user': all_user}
     return render(request, 'dashboard/alluser.html', context)
+
+
+# delete user
+def user_delete(request, user_id):
+    user = User.objects.get(id=user_id)
+    user.delete()
+    return HttpResponseRedirect('/alluser/')
