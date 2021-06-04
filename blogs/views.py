@@ -683,3 +683,21 @@ def lock(request, id):
 
 def unlock(request, id):
     return admin_unlock_user(request, id)
+
+
+def search(request):
+    query = request.GET.get('q')
+    posts = Posts.objects.filter(Q(title__icontains=query))
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    categotries = Categories.objects.all()
+    tags = Tags.objects.filter(Q(name__icontains=query))[:10]
+    user = request.user
+    context = {'page_obj': page_obj,
+               'categories': categotries, 'tags': tags, 'user': user}
+    return render(request, 'user/blogs.html', context)
+
+
+def about(request):
+    return render(request, 'user/about.html')

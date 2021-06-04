@@ -47,5 +47,7 @@ urlpatterns = [
          views.promote_admin_to_super, name="promote_admin"),
     path("lockuser/<int:id>/", views.lock, name="lock"),
     path("unlockuser/<int:id>/", views.unlock, name="unlock"),     
-   
+    path('search', views.search),
+    path('about', views.about),
+
 ]

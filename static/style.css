@@ -113,3 +113,69 @@ form .form-control::placeholder {
 
 
 
+
+
+
+
+.sidebar{
+  width: 200px;
+  height: 600px;
+  position:absolute;
+  /* top: %; */
+
+}
+.wrapper .sidebar{
+  /* height: 60%; */
+  background: #deeeea;
+  padding: 30px 0px;
+  /* position: fixed; */
+}
+
+.wrapper .sidebar h2{
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.wrapper .sidebar ul li{
+  padding: 15px;
+  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}    
+
+.wrapper .sidebar ul li a{
+  color: #ffffff;
+  display: block;
+}
+
+.wrapper .sidebar ul li a .fa{
+  width: 25px;
+}
+
+.wrapper .sidebar ul li:hover{
+  background-color: #deeeea;
+}
+    
+ 
+.wrapper .sidebar .social_media{
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.wrapper .sidebar .social_media a{
+  display: block;
+  width: 40px;
+  background: #deeeea;
+  height: 40px;
+  line-height: 45px;
+  text-align: center;
+  margin: 0 5px;
+  color: #ffffff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
