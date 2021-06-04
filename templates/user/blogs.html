@@ -14,13 +14,13 @@
                           </tr>
                         </thead>
                         <tbody>
-                            {% for category in categories %}
+                            {% for caty in categories %}
                                 <tr class="text-center ">
-                                    <td class="align-middle">{{ category }}</td>
-                                    {% if user in category.user.all %}
-                                        <td><button type="button" class="btn btn-danger" ><a href="/unsubscribe/{{category.id}}">-</a></button></td>
+                                    <td class="align-middle">{{ caty }}</td>
+                                    {% if user in caty.user.all %}
+                                        <td>  <a class="btn btn-danger" href="/unsubscribe/{{caty.id}}">-</a></td>
                                     {% else %}
-                                        <td><button type="button" class="btn btn-success" ><a href="/subscribe/{{category.id}}">+</a></button></td>
+                                        <td><a class="btn btn-success" href="/subscribe/{{caty.id}}">+</a></td>
                                     {% endif %}
                                 </tr>
                             {% endfor %}
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="col" id="main">
-                <h1>Main Area</h1>
+                <h1>{{caty.user.all}}</h1>
                 ...   
             </div>
         </div>
