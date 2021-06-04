@@ -1,5 +1,5 @@
 from django import forms
-from blogs.models import Posts, Categories, ForbiddenWords, Tags
+from blogs.models import Posts, Comments, Categories, ForbiddenWords, Tags
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField, PasswordChangeForm
 from django.http import HttpResponseRedirect
@@ -133,3 +133,11 @@ class ChangePasswordForm(PasswordChangeForm):
     new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input100','placeholder': 'Confirm your password'}),
     label="confirm password")
     
+
+class Comments_Form(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ('content',)
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control'})
+        }

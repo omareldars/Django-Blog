@@ -87,6 +87,7 @@ class Posts(models.Model):
 class Comments(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    reply = models.ForeignKey('Comments', null=True, related_name="replies", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, related_name="comments", on_delete=models.CASCADE)
 
@@ -94,23 +95,6 @@ class Comments(models.Model):
         return '{} commented on {}.'.format(str(self.user.username), self.post.title)
 
     def filter_comment(self):
-        forbidden = ForbiddenWords.objects.all()
-        for word in forbidden:
-            self.content = self.content.replace(str(word), '*' * len(str(word)))
-        return self.content
-
-
-class Replies(models.Model):
-    content = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comments, related_name="replies", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = datetime.datetime.now()
-
-    def __str__(self):
-        return '{} commented on {}.'.format(str(self.user.username), self.post.title)
-
-    def filter_reply(self):
         forbidden = ForbiddenWords.objects.all()
         for word in forbidden:
             self.content = self.content.replace(str(word), '*' * len(str(word)))
