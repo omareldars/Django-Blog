@@ -100,7 +100,7 @@ def login_view(request):
                     if(isLocked(user)):
                         log(user.username + " blocked user")
                         # redirect the user to a custom page for blocked users
-                        return HttpResponseRedirect("/user/blocked")
+                        return HttpResponseRedirect("/blocked")
                     else:
                         login(request, user)
                         log(user.username + " logged in successfully")
