@@ -14,6 +14,7 @@
                           </tr>
                         </thead>
                         <tbody>
+                            
                             {% for caty in categories %}
                                 <tr class="text-center ">
                                     <td class="align-middle">{{ caty }}</td>
@@ -26,6 +27,14 @@
                             {% endfor %}
                         </tbody>
                       </table>
+                      <div class="container">
+                        {% for post in posts %}
+                        <div class="card bg-light">
+                                <h3>{{post.title}}</h3>
+                                <h3>{{post.content}}</h3>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             <div class="col" id="main">

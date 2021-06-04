@@ -152,8 +152,9 @@ def say_blogs(request):
     all_categories = Categories.objects.all()
     # category = Categories.objects.get(id=cat_id)
     # cat_user = Categories.objects.from_queryset(users=request.user)
+    posts=Posts.objects.all()
     user = request.user
-    context = {'categories': all_categories,  'user': user}
+    context = {'categories': all_categories,  'user': user, 'post':posts}
     return render(request, 'user/blogs.html', context)
 
 
