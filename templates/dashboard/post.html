@@ -12,21 +12,28 @@
 {% endblock %} {% block main_block %}
 <div class="container">
   <table class="table table-dark">
-    <th>PostName</th>
-    <th>Postcontent</th>
-    <th>Postcategory</th>
-    <th>Postauthor</th>
-    <th>Posttag</th>
-    <th colspan="2">Action</th>
+    <thead>
+        <tr>
+            <th>Post ID:</th>
+            <th>Post Title:</th>
+            <th>Post Content:</th>
+            <th>Post Category:</th>
+            <th>Publish Date:</th>
+            <th>Post Likes:</th>
+            <th>Post Dis-Likes:</th>
+            <th colspan="2" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for post in posts %}
     <tr>
+        <td>{{ post.id }}</td>
         <td>{{ post.title }}</td>
         <td>{{ post.content}}</td>
         <td>{{ post.category}}</td>
-        <td>{{ post.author }}</td>
-        <td>{{ post.tag }}</td>
-        <td>{{ post.picture }}</td>
-  
+        <td>{{ post.created_at}}</td>
+        <td>{{ post.total_likes }}</td>
+        <td>{{ post.total_dislikes }}</td>
         <td>
           <a class="btn btn-primary" href="{% url 'edit-post' post.id %}">Edit</a>
         </td>

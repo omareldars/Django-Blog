@@ -11,6 +11,7 @@ import os
 from .models import Categories, Tags, Posts, Replies, Comments, ForbiddenWords, Profile
 from .util_funcs import delete_profile_pic
 from .util_funcs import *
+from django.core.paginator import Paginator
 
 # register
 def register(request):
@@ -145,6 +146,21 @@ def say_dashboard(request):
     if(is_authorized_admin(request)):
        return render(request, 'dashboard/base.html', {})
     return HttpResponseRedirect("/")
+
+
+def posts(request):
+    posts = Posts.objects.all()
+    popular_posts = Posts.objects.order_by('-likes')[:5]
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    categotries = Categories.objects.all()
+    tags = Tags.objects.all()[:10]
+    user = request.user
+
+    context = {'page_obj': page_obj, 'categories': categotries,
+               'tags': tags, 'user': user, 'popular_posts': popular_posts, 'posts':posts}
+    return render(request, 'user/blogs.html', context)
 
 
 
@@ -329,6 +345,17 @@ def getAllTag(request):
     context = {'tags': all_tag}
     return render(request, 'dashboard/alltag.html', context)
 
+
+# get tag list
+def getTags(string):
+    tag_list = list(string.split(" "))
+    for tag in tag_list:
+        if not Tags.objects.filter(title=tag):
+            Tags.objects.create(title=tag)
+    return tag_list
+
+
+
 # edit tag
 
 
@@ -405,14 +432,45 @@ def unsubscribe(request, cat_id):
 def new_post(request):
     form = post_form()
     if request.method == 'POST':
-        form = post_form(request.POST)
+        form = post_form(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            tag_list = getTags(request.POST.get('post_tags'))
+            post.save()
+            tags_query = Tags.objects.filter(title__in=tag_list)
+            post.tag.set(tags_query)
             return HttpResponseRedirect('/allpost/')
+            # form.save()
+            # post.save()
+            # print("Photo---->", request.FILES, "\n \n \n")
+            # print("post---->", post, "\n \n \n")
+            # print("form-1--->", form, "\n \n \n")
+            # print("form-2--->", form, "\n \n \n")
+    else:
+        context = {'p_form': form}
+        return render(request, 'dashboard/newpost.html', context)
 
-    context = {'p_form': form}
-    return render(request, 'dashboard/newpost.html', context)
 
+
+
+# def new_post(request):
+#     form = post_form()
+#     # user_id = request.user.id
+#     # print(user_id)
+#     if request.method == 'POST':
+#         form = post_form(request.POST, request.FILES)
+#         post = form.save(commit=False)
+#         print(form)
+#         # post.user_id = int(user_id)
+#         # print(form)
+#         if form.is_valid():
+#             post.save()
+#             return HttpResponseRedirect(
+#                 '#')
+
+#     context = {'p_form': form}
+#     return render(request, 'dashboard/newpost.html', context)
 
 # delete post
 def post_delete(request, post_id):
@@ -420,17 +478,16 @@ def post_delete(request, post_id):
     post.delete()
     return HttpResponseRedirect('/allpost/')
 
+
+
 # get all posts
-
-
 def getAllPost(request):
     all_post = Posts.objects.all()
     context = {'posts': all_post}
     return render(request, 'dashboard/post.html', context)
 
+
 # edit post
-
-
 def edit_post(request, post_id):
     post = get_object_or_404(Posts, id=post_id)
     if request.method == 'POST':
@@ -443,11 +500,10 @@ def edit_post(request, post_id):
                     delete_profile_pic(post.picture)
                 post.picture = picture
             post.user = request.user
-
-            # tag_list = getTags(request.POST.get('tag'))
+            tag_list = getTags(request.POST.get('tag'))
             post.save()
-            # queryset = Tag.objects.filter(name__in=tag_list)
-            # post.tags.set(queryset)
+            tag_query = Tags.objects.filter(name__in=tag_list)
+            post.tags.set(tag_query)
             return HttpResponseRedirect('/allpost')
     else:
         form = post_form(instance=post)
