@@ -4,7 +4,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 
 fs = FileSystemStorage()
@@ -29,11 +29,11 @@ class Categories(models.Model):
     def __str__ (self):
         return self.title
     class Meta:
-        verbose_name_plural="Categories"
+        verbose_name_plural = "Categories"
         
 
 class Tags(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.title
@@ -53,15 +53,15 @@ class Posts(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(User, related_name="likes", blank=True)
     dislikes = models.ManyToManyField(User, related_name="dislikes", blank=True)
-    picture = models.ImageField(null=True, blank=True, storage=fs, verbose_name="profile picture")
-    # created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(auto_now_add=True)
-    created_at = datetime.datetime.now()
-    updated_at = datetime.datetime.now()
-    author = models.ForeignKey(User, on_delete=models.PROTECT)
-    tag = models.ForeignKey(Tags, on_delete=models.PROTECT)
+    picture = models.ImageField(null=True, blank=True, upload_to="./static/image")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    # created_at = datetime.datetime.now()
+    # updated_at = datetime.datetime.now()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    tag = models.ManyToManyField(Tags, blank=True)
     # category = models.ManyToManyField(Categories, related_name='posts')
-    category =models.ForeignKey(Categories,on_delete=models.PROTECT)
+    category = models.ForeignKey(Categories, on_delete=models.DO_NOTHING)
 
     def total_likes(self):
         return self.likes.count()
@@ -69,29 +69,51 @@ class Posts(models.Model):
     def total_dislikes(self):
         return self.dislikes.count()
 
+    def conclusion(self):
+        return self.content[:50] + "..."
+
     def __str__(self):
-        return self.content + '  likes: ' + str(self.total_likes()) + '  dislikes: ' + str(self.total_dislikes())
+        return self.title
+
+    @property
+    def picture_url(self):
+        if self.picture and hasattr(self.picture, 'url'):
+            return self.picture.url
+
+    class Meta:
+        ordering = ('-created_at',)
 
 
 class Comments(models.Model):
     content = models.TextField()
-    created_at = datetime.datetime.now()
-    updated_at = datetime.datetime.now()
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    post = models.ForeignKey(Posts, related_name="comments", on_delete=models.PROTECT, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, related_name="comments", on_delete=models.CASCADE)
 
     def __str__(self):
+        return '{} commented on {}.'.format(str(self.user.username), self.post.title)
+
+    def filter_comment(self):
+        forbidden = ForbiddenWords.objects.all()
+        for word in forbidden:
+            self.content = self.content.replace(str(word), '*' * len(str(word)))
         return self.content
 
 
 class Replies(models.Model):
     content = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    comment = models.ForeignKey(Comments, related_name="replies", on_delete=models.PROTECT, null=True)
-    created_at = datetime.datetime.now()
-    updated_at = datetime.datetime.now()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comments, related_name="replies", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = datetime.datetime.now()
 
     def __str__(self):
+        return '{} commented on {}.'.format(str(self.user.username), self.post.title)
+
+    def filter_reply(self):
+        forbidden = ForbiddenWords.objects.all()
+        for word in forbidden:
+            self.content = self.content.replace(str(word), '*' * len(str(word)))
         return self.content
 
 

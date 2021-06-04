@@ -328,6 +328,17 @@ def getAllTag(request):
     context = {'tags': all_tag}
     return render(request, 'dashboard/alltag.html', context)
 
+
+# get tag list
+def getTags(string):
+    tag_list = list(string.split(" "))
+    for tag in tag_list:
+        if not Tags.objects.filter(title=tag):
+            Tags.objects.create(title=tag)
+    return tag_list
+
+
+
 # edit tag
 
 
@@ -403,23 +414,25 @@ def unsubscribe(request, cat_id):
 
 def new_post(request):
     form = post_form()
-    user_id = request.user.id
-    print("user_id--->", user_id, "\n \n \n")
     if request.method == 'POST':
         form = post_form(request.POST, request.FILES)
-        print("Photo---->", request.FILES, "\n \n \n")
-        post = form.save()
-        print("post---->", post, "\n \n \n")
-        # print("form-1--->", form, "\n \n \n")
-        post.user_id = user_id
-        # print("form-2--->", form, "\n \n \n")
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            tag_list = getTags(request.POST.get('post_tags'))
             post.save()
+            tags_query = Tags.objects.filter(title__in=tag_list)
+            post.tag.set(tags_query)
             return HttpResponseRedirect('/allpost/')
-
-    context = {'p_form': form}
-    return render(request, 'dashboard/newpost.html', context)
+            # form.save()
+            # post.save()
+            # print("Photo---->", request.FILES, "\n \n \n")
+            # print("post---->", post, "\n \n \n")
+            # print("form-1--->", form, "\n \n \n")
+            # print("form-2--->", form, "\n \n \n")
+    else:
+        context = {'p_form': form}
+        return render(request, 'dashboard/newpost.html', context)
 
 
 
@@ -448,17 +461,16 @@ def post_delete(request, post_id):
     post.delete()
     return HttpResponseRedirect('/allpost/')
 
+
+
 # get all posts
-
-
 def getAllPost(request):
     all_post = Posts.objects.all()
     context = {'posts': all_post}
     return render(request, 'dashboard/post.html', context)
 
+
 # edit post
-
-
 def edit_post(request, post_id):
     post = get_object_or_404(Posts, id=post_id)
     if request.method == 'POST':
@@ -471,11 +483,10 @@ def edit_post(request, post_id):
                     delete_profile_pic(post.picture)
                 post.picture = picture
             post.user = request.user
-
-            # tag_list = getTags(request.POST.get('tag'))
+            tag_list = getTags(request.POST.get('tag'))
             post.save()
-            # queryset = Tag.objects.filter(name__in=tag_list)
-            # post.tags.set(queryset)
+            tag_query = Tags.objects.filter(name__in=tag_list)
+            post.tags.set(tag_query)
             return HttpResponseRedirect('/allpost')
     else:
         form = post_form(instance=post)

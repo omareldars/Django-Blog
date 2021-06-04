@@ -7,12 +7,16 @@
     <div class="col-6 offset-3">
       <form method="POST" class="form-group">
         {% csrf_token %} {{ p_form.as_p }}
-
-        <button class="btn btn-primary">Save</button>
-        <button class="btn btn-danger">Clear</button>
+        <div class="form-group">
+            <label for="post_tags">Tags:</label>
+            <input type="text" name="post_tags" id="post_tags" class="form-control">
+        </div>
+        <div class="text-center">
+            <button class="btn btn-outline-primary text-center w-25">Save</button>
+            <button class="btn btn-outline-danger text-center w-25">Clear</button>
+        </div>
       </form>
     </div>
   </div>
 </div>
-
 {% endblock %}

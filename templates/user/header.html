@@ -39,7 +39,7 @@
                             </li>
 
                             {% if user.is_authenticated %}
-                            <span><a href="/profile"><img src={{user.profile.profile_pic.url}}  width="40px" height="40px" border-radius="50%"></a></span>
+                            <span><a href="/profile"><img src={{user.profile.profile_pic.url}} class="img-rounded" style="border-radius: 50%;" width="40px" height="40px" border-radius="50%"></a></span>
                             <span style="margin-top: 2%;margin-left: 15px;"><a href="/profile" style="color:yellowgreen;">Hi, {{ user.username }}!</a></span>
                             <p style="margin-top: 2%;margin-left: 15px; font-weight: bold;"><a href="{% url 'logout' %}" style="color:red;margin-top: 20%;">Log Out</a></p>
                             {% else %}

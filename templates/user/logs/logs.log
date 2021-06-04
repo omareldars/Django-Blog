@@ -43,7 +43,6 @@ invalid registration form
 omar logged in successfully
 created a new user successfully with username: ayaa_ali
 created a new user successfully with username: asmaaali
-
 invalid registration form
 /images/5_3JBP83E.jpg
 created a new user successfully with username: omar
@@ -110,7 +109,6 @@ couldn't send email message'User' object has no attribute 'fname'
 couldn't send email message'User' object has no attribute 'fname'
 couldn't send email message'User' object has no attribute 'fname'
 invalid registration form
-<<<<<<< HEAD
 invalid registration form
 invalid registration form
 invalid registration form
@@ -137,7 +135,6 @@ created a new user successfully with username: asmaaelalfy2
 invalid registration form
 /images/defaultImage.png
 created a new user successfully with username: asmaaelalfy2
-=======
 /images/IMG_20210122_162311_193.jpg
 created a new user successfully with username: baiomy_1
 couldn't send email message[Errno 111] Connection refused
@@ -148,9 +145,7 @@ baiomy_1 logged in successfully
 baiomy_1 logged in successfully
 baiomy_1 logged in successfully
 baiomy_1 logged in successfully
-
 baiomy_1 logged in successfully
-<<<<<<< HEAD
 baiomy_1 logged in successfully
 baiomy_1 logged in successfully
 valid edit form
@@ -163,8 +158,6 @@ changed password for baiomy_1
 changed password for baiomy_1
 invalid login form
 baiomy_1 logged in successfully
-=======
->>>>>>> 24742b337b27d58ae6c6e22fc00196f7003f52af
 /images/defaultImage.png
 created a new user successfully with username: asmaaelalfy2
 invalid registration form
@@ -185,7 +178,6 @@ asmaa logged in successfully
 admin logged in successfully
 admin promoted asmaa.
 admin promoted asmaa to a super user.
-<<<<<<< HEAD
 /images/customer-2.png
 created a new user successfully with username: ekhlasmohamed
 admin logged in successfully
@@ -198,17 +190,11 @@ admin unlocked asmaaali.
 admin unlocked asmaaali.
 admin locked asmaaali.
 admin unlocked asmaaali.
-=======
->>>>>>> 72da81850a12820a0a44466c31507dd17f7535a4
 baiomy_1 logged in successfully
-<<<<<<< HEAD
 baiomy_1 logged in successfully
 ahmedelbaiomy logged in successfully
 baiomy_1 logged in successfully
-=======
->>>>>>> 6e9fd8d4711308f1517ca6fdbf5c8fa86b02dcc4
 admin logged in successfully
->>>>>>> 8412dc0a0871a8fbabb78b22a6d2950ecd969c97
 /images/customer-2_9cTY7sh.png
 created a new user successfully with username: baiomy_2
 invalid registration form
@@ -247,6 +233,7 @@ invalid registration form
 test logged in successfully
 ahmedelbaiomy logged in successfully
 ahmedelbaiomy promoted test.
+baiomy_1 logged in successfully
 admin logged in successfully
 /images/customer-2_QK20dch.png
 created a new user successfully with username: ekhlasmohamed
@@ -269,3 +256,6 @@ couldn't send email message'User' object has no attribute 'fname'
 admin logged in successfully
 valid edit form
 no picunsupported operand type(s) for +: 'PosixPath' and 'str'
+valid edit form
+no picunsupported operand type(s) for +: 'PosixPath' and 'str'
+admin  updated his profile
