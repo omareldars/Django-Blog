@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import post_form, category_form, ForbiddenWordForm,TagForm, RegistrationForm,LoginForm,ProfileForm
+from .forms import post_form, category_form, ForbiddenWordForm,TagForm, RegistrationForm,LoginForm,ProfileForm, EditProfileForm, ChangePasswordForm
 from .logger import log
 from django.contrib.auth import login, authenticate,update_session_auth_hash
 from django.contrib.auth.models import User
@@ -462,3 +462,74 @@ def getAllUser(request):
     all_user =User.objects.all()
     context = {'all_user': all_user}
     return render(request, 'dashboard/alluser.html', context)
+
+
+
+    
+
+def edit_profile(request):
+    """this edit profile view does the following:
+    1- checks that user is logged in already or redirects him to homepage
+    2- check if the method is post and then the submitted forms are valid
+    3- update user info and save
+    4- if success redirects the user to profile page"""
+
+    if(request.user.is_authenticated):
+        if request.method == "POST":
+            edit_form = EditProfileForm(data=request.POST)
+            profile_form = ProfileForm(request.POST, request.FILES)
+            user = request.user
+            if(edit_form.is_valid()):
+                log("valid edit form")
+                file = request.FILES.get("profile_pic")
+                user.first_name = request.POST["first_name"]
+                user.last_name = request.POST["last_name"]
+                user.profile.bio = request.POST["bio"]
+                if(file != None):
+                    if(user.profile.profile_pic != None):
+                        delete_profile_pic(user.profile.profile_pic)
+                    user.profile.profile_pic = file
+                user.save()
+                user.profile.save()
+                log(user.username + "  updated his profile")
+                return HttpResponseRedirect("/profile")
+            else:
+                log("invalid change form")
+                return HttpResponseRedirect("/")
+        else:
+            user = request.user
+            user_data = {"first_name": user.first_name,
+                         "last_name": user.last_name}
+            bio_data = {"bio": user.profile.bio}
+            edit_form = EditProfileForm(data=user_data)
+            profile_form = ProfileForm(data=bio_data)
+            context = {"edit_form": edit_form, "profile_form": profile_form}
+            return render(request, "user/edit.html", context)
+    else:
+        return HttpResponseRedirect("/")
+
+
+def change_password(request):
+    """this change password view does the following:
+    1- checks that user is logged in already or redirects him to homepage
+    2- check if the method is post and then the submitted forms are valid
+    3- update user password and save
+    4- if success redirects the user to profile page"""
+
+    if(request.user.is_authenticated):
+        if request.method == 'POST':
+            form = ChangePasswordForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)
+                log("changed password for "+user.username)
+                return HttpResponseRedirect('/profile')
+            else:
+                log("couldn't change password for "+user.username)
+        else:
+            form = ChangePasswordForm(request.user)
+        return render(request, 'user/change_password.html', {
+            'form': form
+        })
+    else:
+        return HttpResponseRedirect("/")

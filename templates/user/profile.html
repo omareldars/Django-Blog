@@ -1,24 +1,29 @@
 {% extends './base.html' %} 
 {% block page_content %}
 
-<div class="container my-5 " id="colorlib-main">
-    <div class="container mb-5">
+<div class="container my-5 " id="colorlib-main" style="display : flex;">
+    <div class="container mb-5" style="display: inline;float: left;">
         {%if userprofile.profile_pic%}
-            <img src="{{userprofile.profile_pic.url}}" alt="user_profile_pic" width="400" height="400" />
+            <img src="{{userprofile.profile_pic.url}}" alt="user_profile_pic"  border-radius="50%" -webkit-border-radius="200px" -moz-border-radius="200px" width="400" height="400" />
         {% else %} 
             <div style="width: 200 ; height:200;"></div> 
         {%endif%}
     </div>
-    <div class="container mb-5">
-        <h3 class="mb-3">Full Name : {{user.first_name}} {{user.last_name}}</h3>
+    <div class="container mb-5" style="display: inline;float: left;margin-top: 10%;">
+        <h3 class="mb-3"><span style="font-weight: bold;">Full Name :</span> {{user.first_name}} {{user.last_name}}</h3>
    
-        <h3 class="mb-3">Email : {{user.email}}</h3>
+        <h3 class="mb-3"><span style="font-weight: bold;">Email :</span> {{user.email}}</h3>
 
-        <h4 class="mb-4">Bio : {{user.profile.bio}} </h4>
+        <h4 class="mb-4"><span style="font-weight: bold;">Bio :</span> {{user.profile.bio}} </h4>
        
+        <div class="container">
+            <a class="btn px-5 py-2 btn-success" href={% url 'edit_profile' %}>Edit profile</a>
+        </div>
+
     </div>
+      
     
-    
+
 
 </div>
 
