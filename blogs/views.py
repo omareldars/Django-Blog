@@ -64,7 +64,7 @@ def register(request):
                         log("couldn't send email message"+str(ex))
 
                     # redirect to user profile page
-                    return HttpResponseRedirect("/user/profile")
+                    return HttpResponseRedirect("/profile")
                 else:
                     log("cannot login from registration form")
             else:

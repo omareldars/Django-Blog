@@ -13,6 +13,7 @@ urlpatterns = [
     path('delete/<category_id>', views.delete_category, name='delete-category'),
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name="user/logout.html"), name='logout'),
     path("profile/", views.profile, name="profile"),
     path('blocked/', views.blocked, name="blocked"),
     path('newword/', views.add_forbiden_word, name='add-word'),
@@ -30,7 +31,6 @@ urlpatterns = [
     path('deletetag/<tag_id>', views.delete_tag, name='delete-tag'),
     path('subscribe/<cat_id>', views.subscribe),
     path('unsubscribe/<cat_id>', views.unsubscribe),
-    path('alluser', views.getAllUser, name="all-user"),
-
-    path('deleteuser/<user_id>', views.user_delete, name='delete-user')
+    path('deleteuser/<user_id>', views.user_delete, name='delete-user'),
+    path('alluser/', views.getAllUser, name="all-user"),
 ]

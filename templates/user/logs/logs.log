@@ -110,6 +110,7 @@ couldn't send email message'User' object has no attribute 'fname'
 couldn't send email message'User' object has no attribute 'fname'
 couldn't send email message'User' object has no attribute 'fname'
 invalid registration form
+<<<<<<< HEAD
 invalid registration form
 invalid registration form
 invalid registration form
@@ -136,3 +137,31 @@ created a new user successfully with username: asmaaelalfy2
 invalid registration form
 /images/defaultImage.png
 created a new user successfully with username: asmaaelalfy2
+=======
+/images/IMG_20210122_162311_193.jpg
+created a new user successfully with username: baiomy_1
+couldn't send email message[Errno 111] Connection refused
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+baiomy_1 logged in successfully
+
+baiomy_1 logged in successfully
+>>>>>>> 24742b337b27d58ae6c6e22fc00196f7003f52af
+/images/defaultImage.png
+created a new user successfully with username: asmaaelalfy2
+invalid registration form
+invalid registration form
+invalid registration form
+invalid login form
+invalid login form
+asmaaelalfy2 logged in successfully
+invalid login form
+asmaaelalfy2 logged in successfully
+/images/green-potted-plant-on-white-ceramic-vase-1166644_xjHQR6d.jpg
+created a new user successfully with username: asmaaelalfy12
+/images/green-potted-plant-on-white-ceramic-vase-1166644_medy140.jpg
+created a new user successfully with username: asmaaelalfy12
