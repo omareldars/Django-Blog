@@ -173,7 +173,7 @@ def blog_detail(request, id):
     comments = Comments.objects.filter(post=post)
     context = {
         "post": post,
-        # "comments": comments,
+        "comments": comments,
     }
     return render(request, 'user/post-details.html', context)
 
