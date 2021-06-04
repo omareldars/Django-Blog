@@ -2,71 +2,68 @@
 {% load static %} 
 {% block page_content %} 
 
+<link href="{% static 'about.css' %}" rel="stylesheet">
+
+
 <div class="about-section">
     <h1  style="color:white">About Us Page</h1>
     <p style="color:white" >Some text about who we are and what we do.</p>
-    <p style="color:white">Resize the browser window to see that this page is responsive by the way.</p>
   </div>
   <div class="container">
   <h2 style="text-align:center">Our Team</h2>
   <div class="row">
     <div class="column">
-      <div class="card w-50">
+      <div class="card">
         <img src="{% static 'images/customer-2.png' %}" alt="Jane" style="width:100%">
         <div class="container">
           <h2>Ahmed Elbaiomy</h2>
           <p class="title">CEO & Founder</p>
-          <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-          <p>jane@example.com</p>
+          <p>ahmedelbaiomy40@gmail.com</p>
           <p><button class="button">Contact</button></p>
         </div>
       </div>
     </div>
   
     <div class="column">
-      <div class="card w-50">
+      <div class="card">
         <img src="{% static 'images/customer-2.png' %}" alt="Mike" style="width:100%">
         <div class="container">
           <h2>Omar abdelaziz</h2>
           <p class="title">Art Director</p>
-          <p>Some text that describes me lorem ipsum ipsum lorem.</p>
           <p>mike@example.com</p>
-          <p><button class="button">Contact</button></p>
+          <p><a class="button" href="https://www.linkedin.com/in/omar-abd-el-aziz/">Contact</a></p>
         </div>
       </div>
     </div>
   
     <div class="column">
-      <div class="card w-50">
+      <div class="card">
         <img src="{% static 'images/customer-2.png' %}" alt="John" style="width:100%">
         <div class="container">
           <h2>Islam elshaabany</h2>
           <p class="title">Designer</p>
-          <p>Some text that describes me lorem ipsum ipsum lorem.</p>
           <p>john@example.com</p>
           <p><button class="button">Contact</button></p>
         </div>
       </div>
     </div>
     <div class="column">
-        <div class="card w-50">
+        <div class="card">
           <img src="{% static 'images/customer-2.png' %}" alt="John" style="width:100%">
           <div class="container">
             <h2>Ekhlas mohamed</h2>
             <p class="title">Designer</p>
-            <p>Some text that describes me lorem ipsum ipsum lorem.</p>
             <p>john@example.com</p>
             <p><button class="button">Contact</button></p>
           </div>
         </div>
       </div>
       <div class="column">
-        <div class="card w-50">
+        <div class="card">
           <img src="{% static 'images/customer-2.png' %}" alt="John" style="width:100%">
           <div class="container">
             <h2>Asmaa younis</h2>
             <p class="title">Designer</p>
-            <p>Some text that describes me lorem ipsum ipsum lorem.</p>
             <p>john@example.com</p>
             <p><button class="button">Contact</button></p>
           </div>
