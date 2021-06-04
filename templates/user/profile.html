@@ -4,7 +4,7 @@
 <div class="container my-5 " id="colorlib-main" style="display : flex;">
     <div class="container mb-5" style="display: inline;float: left;">
         {%if userprofile.profile_pic%}
-            <img src="{{userprofile.profile_pic.url}}" alt="user_profile_pic"  border-radius="50%" -webkit-border-radius="200px" -moz-border-radius="200px" width="400" height="400" />
+            <img src="{{userprofile.profile_pic.url}}" class="img-rounded" style="border-radius: 50%;" alt="user_profile_pic" width="400" height="400"/>
         {% else %} 
             <div style="width: 200 ; height:200;"></div> 
         {%endif%}
