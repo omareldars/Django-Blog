@@ -185,8 +185,27 @@ asmaa logged in successfully
 admin logged in successfully
 admin promoted asmaa.
 admin promoted asmaa to a super user.
+<<<<<<< HEAD
+/images/customer-2.png
+created a new user successfully with username: ekhlasmohamed
+admin logged in successfully
+admin promoted ekhlasmohamed.
+/images/product-2.jpg
+created a new user successfully with username: asmaaali
+admin logged in successfully
+admin locked asmaaali.
+admin unlocked asmaaali.
+admin unlocked asmaaali.
+admin locked asmaaali.
+admin unlocked asmaaali.
+=======
 >>>>>>> 72da81850a12820a0a44466c31507dd17f7535a4
 baiomy_1 logged in successfully
+<<<<<<< HEAD
 baiomy_1 logged in successfully
 ahmedelbaiomy logged in successfully
 baiomy_1 logged in successfully
+=======
+>>>>>>> 6e9fd8d4711308f1517ca6fdbf5c8fa86b02dcc4
+admin logged in successfully
+>>>>>>> 8412dc0a0871a8fbabb78b22a6d2950ecd969c97

@@ -44,4 +44,7 @@ urlpatterns = [
     path("users/promote/<int:id>/", views.promote, name="promote"),
     path("admins/promote/<int:id>",
          views.promote_admin_to_super, name="promote_admin"),
+    path("lockuser/<int:id>/", views.lock, name="lock"),
+    path("unlockuser/<int:id>/", views.unlock, name="unlock"),     
+   
 ]

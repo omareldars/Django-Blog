@@ -34,13 +34,13 @@
         >
       </td>
       <td>
-        <a href="#"
+        <a href="{%url 'lock' user.id %}"
           ><button
             type="button"
             class="btn btn-danger"
             onclick="return confirm('are you sure ?');"
           >
-            Block
+            lock
           </button></a
         >
       </td>
@@ -67,8 +67,8 @@
         >
       </td>
       <td>
-        <a href="#"
-          ><button type="button" class="btn btn-primary">Unblock</button></a
+        <a href="{%url 'unlock' user.id %}"
+          ><button type="button" class="btn btn-primary"  onclick="return confirm('are you sure ?');">Unlock</button></a
         >
       </td>
     </tr>
