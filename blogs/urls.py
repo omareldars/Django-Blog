@@ -49,8 +49,13 @@ urlpatterns = [
     path('search/', views.search),
     path('about/', views.about),
     path("unlockuser/<int:id>/", views.unlock, name="unlock"),
-    path('like_post/<post_id>', views.like_post, name="like"),
-    path('dislike_post/<post_id>', views.dislike_post, name="dislike"),
+    path('like_post/<id>', views.like_post, name="like"),
+    path('dislike_post/<id>', views.dislike_post, name="dislike"),
     path('deletecomment/<post_id>/<com_id>', views.commentDelete, name='comment-delete'),
     path('editcomment/<int:id>/', views.commentEdit, name='edit-comment'),
+    path('new-post/', views.user_new_post, name="user-add-post"),
+    path('delete-post/<post_id>', views.user_post_delete, name='user-delete-post'),
+    path('edit-post/<post_id>', views.user_edit_post, name='user-edit-post'),
+    path('category/<cat_id>', views.categoryPosts),
+    path('tag/<tag_id>', views.tagPosts)
 ]

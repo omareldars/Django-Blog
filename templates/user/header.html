@@ -14,9 +14,10 @@
                     <div class="navbar-collapse collapse show ml-5" id="worldNav" style="margin-bottom:-12px">
                         <div id="search-wrapper" style="padding: 11px;">
                             <form action="/search">
-                                <input type="text" id="search" placeholder="Search something...">
-                                <div id="close-icon"></div>
-                                <input class="d-none" type="submit" value="">
+                                <span class="icon icon-search close-icon"></span>
+                                <input type="text" id="q" name="q" value="{{ request.GET.q }}" placeholder="Search something...">
+{#                                <div id="close-icon"></div>#}
+{#                                <input class="d-none" type="submit" value="">#}
                             </form>
                         </div>
                         <ul class="navbar-nav ml-auto" style="margin-bottom:12px;margin-right: 25px;">

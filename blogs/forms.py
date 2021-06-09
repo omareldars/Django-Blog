@@ -8,16 +8,14 @@ from .models import Profile
 
 
 class post_form(forms.ModelForm):
+    picture = forms.ImageField(required=False)
     class Meta:
         model = Posts
         fields = ('title', 'content', 'picture', 'category')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
-            # 'author': forms.Select(attrs={'class': 'custom-select'}),
-            # 'tag': forms.Select(attrs={'class': 'custom-select'}),
             'picture': forms.FileInput(attrs={'class': 'form-control-file'}),
-            # 'category': forms.CheckboxSelectMultiple(attrs={'class': 'select', 'multiple':True,})
             'category': forms.Select(attrs={'class': 'custom-select'}),
         }
 

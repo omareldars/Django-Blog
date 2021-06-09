@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="936c44b2-fb1f-46fa-8269-91bd2efc251c" name="fy.xsolutions.tech" url="http://fy.xsolutions.tech">
+        <fileTransfer accessType="SFTP" sshConfigId="0b34939e-4186-4daf-9899-b57094b635ef" sshConfig="fy.xsolutions.tech">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

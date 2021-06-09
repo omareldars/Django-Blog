@@ -61,7 +61,7 @@ class Posts(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.ManyToManyField(Tags, blank=True)
     # category = models.ManyToManyField(Categories, related_name='posts')
-    category = models.ForeignKey(Categories, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
 
     def total_likes(self):
         return self.likes.count()

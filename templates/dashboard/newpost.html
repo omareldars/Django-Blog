@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col-6 offset-3">
-      <form method="POST" class="form-group">
+      <form method="POST" class="form-group" enctype="multipart/form-data">
         {% csrf_token %} {{ p_form.as_p }}
         <div class="form-group">
             <label for="post_tags">Tags:</label>

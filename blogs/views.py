@@ -5,7 +5,7 @@ from .forms import post_form, category_form, ForbiddenWordForm,TagForm, Registra
 from .logger import log
 from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from .util_funcs import isLocked
 import os
 from .models import Categories, Tags, Posts, Comments, ForbiddenWords, Profile
@@ -30,52 +30,30 @@ def register(request):
     """this custom login view does the following:
     1- checks if request comes from an already logged in user so it redirects him to hompage again
     2- check if the method is post and then the submitted form is valid"""
-
-    print(request.POST)
     if(not request.user.is_authenticated):
         if request.method == "POST":
             user_form = RegistrationForm(request.POST)
-            print(user_form.is_valid())
-
             # get the form and the upladed files
             profile_form = ProfileForm(request.POST, request.FILES)
-            print("profile_form_data--->", profile_form.data, profile_form.files)
             if user_form.is_valid():
                 user = user_form.save()  # save the user into database and return it
-                # p = profile_form.save()
-                # print("p---->",p)
-                print("just user--->", user)
-                print("user_form--->", user_form.data, request.FILES)
                 # get the profile of the created user
-                print("before calling profile--->")
                 profile = Profile.objects.get(user=user)
-                print("ppppppp----->", profile)
-                # profile = Profile.objects.set(user=user)
-                print("After calling profile--->")
                 # get the uplloaded picture if any
                 file = request.FILES.get("profile_pic")
-                print("file--->", file)
                 if(file != None):
-                    # profile_pic = file
                     profile.profile_pic = file
-                    # profile.profile_pic = file  # add the provided pic to that user profile
                 profile.bio = request.POST["bio"]
-                # profile.bio = request.POST["bio"]
-                # profile.save()  # save the updates to user profile
                 profile.save()
                 log(profile.profile_pic.url)
-                log("created a new user successfully with username: " +
-                    user.username)  # for debugging purposes
-                user = authenticate(
-                    username=request.POST["username"], password=request.POST["password1"])
+                log("created a new user successfully with username: " + user.username)  # for debugging purposes
+                user = authenticate(username=request.POST["username"], password=request.POST["password1"])
                 if user is not None:
                     login(request, user)
                     try:
-                        send_mail('Welcome to our blog', 'Django Blog team welcomes you to our blog .',
-                                  'ahmedelbaiomy40@gmail.com', [user.email], fail_silently=False,)
+                        EmailMessage('Welcome to  I-Blog', 'The Team: \n 1- Omar \n 2- Ahmed \n 3- Eslam \n 4- Ekhlas \n 5- Asmaa \n welcome you','english.iti41@gmail.com', [user.email]).send(fail_silently=False)
                     except Exception as ex:
                         log("couldn't send email message"+str(ex))
-
                     # redirect to user profile page
                     return HttpResponseRedirect("/profile")
                 else:
@@ -85,7 +63,6 @@ def register(request):
         else:
             user_form = RegistrationForm()
             profile_form = ProfileForm()
-        # context = {"user_form": user_form}
         context = {"user_form": user_form, "profile_form": profile_form}
         return render(request, 'user/register.html', context)
     else:
@@ -200,7 +177,7 @@ def blog_detail(request, id):
         if comment_form.is_valid():
             content = request.POST.get('content')
             for word in forbidden:
-                if word in content:
+                if str(word) in content:
                     user.profile.undesired_words_count +=1
                     user.profile.save()
             reply_id = request.POST.get('comment_id')
@@ -211,14 +188,14 @@ def blog_detail(request, id):
             comment_form = Comments_Form()
     else:
         comment_form = Comments_Form()
-        context = {
+    context = {
             "post": post,
             "comments": comments,
             "comment_form": comment_form,
             "categories": categories,
             "tags": tags,
             "user": user
-    }
+        }
     return render(request, 'user/post-details.html', context)
 
 
@@ -474,6 +451,7 @@ def new_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.picture = request.FILES.get('picture')
             tag_list = getTags(request.POST.get('post_tags'))
             post.save()
             tags_query = Tags.objects.filter(title__in=tag_list)
@@ -489,6 +467,28 @@ def new_post(request):
         context = {'p_form': form}
         return render(request, 'dashboard/newpost.html', context)
 
+def user_new_post(request):
+    form = post_form()
+    if request.method == 'POST':
+        form = post_form(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.picture = request.FILES.get('picture')
+            tag_list = getTags(request.POST.get('post_tags'))
+            post.save()
+            tags_query = Tags.objects.filter(title__in=tag_list)
+            post.tag.set(tags_query)
+            return HttpResponseRedirect('/')
+            # form.save()
+            # post.save()
+            # print("Photo---->", request.FILES, "\n \n \n")
+            # print("post---->", post, "\n \n \n")
+            # print("form-1--->", form, "\n \n \n")
+            # print("form-2--->", form, "\n \n \n")
+    else:
+        context = {'p_form': form}
+        return render(request, 'user/newpost.html', context)
 
 
 
@@ -516,6 +516,10 @@ def post_delete(request, post_id):
     post.delete()
     return HttpResponseRedirect('/allpost/')
 
+def user_post_delete(request, post_id):
+    post = Posts.objects.get(id=post_id)
+    post.delete()
+    return HttpResponseRedirect('')
 
 
 # get all posts
@@ -538,15 +542,42 @@ def edit_post(request, post_id):
                     delete_profile_pic(post.picture)
                 post.picture = picture
             post.user = request.user
-            tag_list = getTags(request.POST.get('tag'))
+            tag_list = getTags(request.POST.get('post_tags'))
             post.save()
-            tag_query = Tags.objects.filter(name__in=tag_list)
-            post.tags.set(tag_query)
-            return HttpResponseRedirect('/allpost')
+            tag_query = Tags.objects.filter(title__in=tag_list)
+            post.tag.set(tag_query)
+            return HttpResponseRedirect('/allpost/')
     else:
         form = post_form(instance=post)
         context = {"p_form": form}
         return render(request, "dashboard/newpost.html", context)
+
+
+
+def user_edit_post(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    if request.method == 'POST':
+        form = post_form(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            picture = request.FILES.get('picture')
+            if (picture):
+                if(post.picture):
+                    delete_profile_pic(post.picture)
+                post.picture = picture
+            post.user = request.user
+            tag_list = getTags(request.POST.get('post_tags'))
+            post.save()
+            tag_query = Tags.objects.filter(title__in=tag_list)
+            post.tag.set(tag_query)
+            return HttpResponseRedirect('/')
+    else:
+        form = post_form(instance=post)
+        context = {"p_form": form}
+        return render(request, "user/newpost.html", context)
+
+
+
 
 
 # all user
@@ -560,8 +591,8 @@ def getAllUser(request):
 # like post
 def like_post(request, id):
     post = get_object_or_404(Posts, pk=id)
-    post_likes = post.total_likes()
-    post_disliked = post.total_dislikes()
+    post_likes = post.likes.all()
+    post_disliked = post.dislikes.all()
     user = request.user
     if (user not in post_likes):
         if(user not in post_disliked):
@@ -577,8 +608,9 @@ def like_post(request, id):
 # post dislikes and auto delete after 10 dislikes
 def dislike_post(request, id):
     post = get_object_or_404(Posts, pk=id)
-    post_likes = post.total_likes()
-    post_disliked = post.total_dislikes()
+    print(post)
+    post_likes = post.likes.all()
+    post_disliked = post.dislikes.all()
     user = request.user
     if (user not in post_disliked):
         if(user not in post_likes):
@@ -787,12 +819,13 @@ def unlock(request, id):
 
 def search(request):
     query = request.GET.get('q')
-    posts = Posts.objects.filter(Q(title__icontains=query))
+    print(query," -----> ",type(query))
+    posts = Posts.objects.filter(Q(title__contains=query))
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     categotries = Categories.objects.all()
-    tags = Tags.objects.filter(Q(name__icontains=query))[:10]
+    tags = Tags.objects.filter(Q(title__contains=query))[:10]
     user = request.user
     context = {'page_obj': page_obj,
                'categories': categotries, 'tags': tags, 'user': user}
@@ -801,3 +834,33 @@ def search(request):
 
 def about(request):
     return render(request, 'user/about.html')
+
+
+
+def tagPosts(request, tag_id):
+    tag = Tags.objects.get(id=tag_id)
+    # posts = tag.post_set.all()
+    posts = Posts.objects.filter(tag=tag)
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    categotries = Categories.objects.all()
+    tags = Tags.objects.all()[:10]
+    user = request.user
+    context = {'page_obj': page_obj,
+               'categories': categotries, 'tags': tags, 'user': user}
+    return render(request, 'user/blogs.html', context)
+
+
+def categoryPosts(request, cat_id):
+    category = Categories.objects.get(id=cat_id)
+    posts = Posts.objects.filter(category=category)
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    categotries = Categories.objects.all()
+    tags = Tags.objects.all()[:10]
+    user = request.user
+    context = {'page_obj': page_obj,
+               'categories': categotries, 'tags': tags, 'user': user}
+    return render(request, 'user/blogs.html', context)

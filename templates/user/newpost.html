@@ -1,0 +1,27 @@
+{% extends './base.html' %} 
+{% load static %}
+{% block page_content %}
+<link href='https://fonts.googleapis.com/css?family=Indie Flower' rel='stylesheet'>
+    <style>
+        div,a, h3, span, p, h1, h2 {
+            font-family: 'Indie Flower';font-size: 22px;
+        }
+    </style>
+<div class="container">
+  <div class="row">
+    <div class="col-6 offset-3">
+      <form method="POST" class="form-group" enctype="multipart/form-data">
+        {% csrf_token %} {{ p_form.as_p }}
+        <div class="form-group">
+            <label for="post_tags">Tags:</label>
+            <input type="text" name="post_tags" id="post_tags" class="form-control">
+        </div>
+        <div class="text-center">
+            <button class="btn btn-outline-primary text-center w-25">Save</button>
+            <button class="btn btn-outline-danger text-center w-25">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

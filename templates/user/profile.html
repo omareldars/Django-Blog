@@ -1,6 +1,11 @@
 {% extends './base.html' %} 
 {% block page_content %}
-
+<link href='https://fonts.googleapis.com/css?family=Indie Flower' rel='stylesheet'>
+    <style>
+        div,a, h3, span, p, h1, h2 {
+            font-family: 'Indie Flower';font-size: 22px;
+        }
+    </style>
 <div class="container my-5 " id="colorlib-main" style="display : flex;">
     <div class="container mb-5" style="display: inline;float: left;">
         {%if userprofile.profile_pic%}
