@@ -2,7 +2,7 @@
 ITI Intake-41 Open-Source Track, 9-months Diploma
 
 # Team Members:
-1- Omar Abd El-Aziz\n
+1- Omar Abd El-Aziz
 2- Ahmed El-Baiomy
 3- Ekhlas Mohamed
 4- Asmaa El-Alfy
@@ -21,7 +21,7 @@ ITI Intake-41 Open-Source Track, 9-months Diploma
 9- Comments and Replies will be filterd upon specific list of words and if 
     one word of this list exists, it will be replaced with *'s of word length.
 10- User Can Edit his own Profile Settings.
-11- User Can Search by post-title, tag or category
+11- User Can Search by post-title, tag or category.
 -------
       => Administrative-Privilege:
 1- Admin Can do Anything on the system, but cannot login as super-user
