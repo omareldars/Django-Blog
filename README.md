@@ -46,7 +46,7 @@ ITI Intake-41 Open-Source Track, 9-months Diploma
 # 2- Edit Settings File
 -> Go to Settings.py file and add your db.user, and db.pass for mysql
 # 3- Make The DB-Migrations
--> use command: python3 manage.py makemigrations
+-> use command: python3 manage.py makemigrations <br /> 
 -> after that use command: python3 manage.py migrate
 # 4- Run The Server
 -> use command: python3 manage.py runserver
