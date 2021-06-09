@@ -2,7 +2,7 @@
 ITI Intake-41 Open-Source Track, 9-months Diploma
 
 # Team Members:
-1- Omar Abd El-Aziz
+1- Omar Abd El-Aziz\n
 2- Ahmed El-Baiomy
 3- Ekhlas Mohamed
 4- Asmaa El-Alfy
