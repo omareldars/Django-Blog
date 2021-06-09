@@ -79,8 +79,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'blog',
-        'USER': 'root',
-        'PASSWORD': 'omar1234',
+        'USER': 'add-user-db-here',
+        'PASSWORD': 'add-pass-db-here',
         'HOST': 'localhost',
         'PORT': '3306'
     }
@@ -140,5 +140,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'english.iti41@gmail.com'
-EMAIL_HOST_PASSWORD = 'osintake41iti'
+EMAIL_HOST_USER = 'add-gmail-here'
+EMAIL_HOST_PASSWORD = 'add-pass-here'
