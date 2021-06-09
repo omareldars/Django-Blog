@@ -1,7 +1,7 @@
 # Team Django-Blog for ITI-Intake 41
 ITI Intake-41 Open-Source Track, 9-months Diploma
 
-#Team Members:
+# Team Members:
 1- Omar Abd El-Aziz
 2- Ahmed El-Baiomy
 3- Ekhlas Mohamed
